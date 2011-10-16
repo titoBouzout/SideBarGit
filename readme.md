@@ -172,7 +172,7 @@ https://github.com/SublimeText/SideBarGit
 Forum Thread
 ------------------
 
-http://www.sublimetext.com/forum/viewtopic.php?f=&t=XXXXXX
+http://www.sublimetext.com/forum/viewtopic.php?f=5&t=3405
 
 Contribute
 ------------------
