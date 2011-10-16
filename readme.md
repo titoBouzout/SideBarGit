@@ -11,7 +11,7 @@ This plugin is a port of the "Komodin" extension for komodo edit. See: https://g
 Usage
 ------------------
  
-* Right click on "multiple/single" "files/folders" of the "places" sidebar to apply commands on selected files which maybe are from different repositories.
+* Right click on "multiple/single" "files/folders" of the "tree" sidebar to apply commands on selected files which maybe are from different repositories.
 
 * To apply commands to focused document use the tab context menu.
  
