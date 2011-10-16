@@ -133,6 +133,7 @@ class SideBarGit:
 
 	def status(self, message):
 		message = (message[249] + '…') if len(message) > 249 else message
+		message = message.replace('\n', ' ')
 		try:
 			sublime.active_window().active_view().set_status('SideBarGit', 'Git : '+(message.decode('utf-8')))
 			sublime.set_timeout(self.statusRemove, 16000)
