@@ -494,6 +494,7 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
 			original = item.path()
+			originalIsDirectory = item.isDirectory()
 			item.path(item.dirname())
 			while not os.path.exists(item.join('.git')):
 				if os.path.exists(item.join('.gitignore')):
@@ -507,8 +508,11 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 			else:
 				item.path(item.join('.gitignore'))
 				item.create()
-			item.write(item.contentUTF8()+'\n'+(original.replace(item.dirname(), '').replace('\\', '/')))
-			SideBarGit().status('Ignored file "'+original.replace(item.dirname(), '').replace('\\', '/')+'" on '+item.path())
+			ignore_entry = re.sub('^/+', '', original.replace(item.dirname(), '').replace('\\', '/'))
+			if originalIsDirectory:
+				ignore_entry += '/*'
+			item.write(item.contentUTF8().strip()+'\n'+ignore_entry)
+			SideBarGit().status('Ignored file "'+ignore_entry+'" on '+item.path())
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
