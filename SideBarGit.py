@@ -8,7 +8,7 @@ class SideBarGit:
 	
 	def run(self, object, modal = False, background = False):
 
-		debug = True
+		debug = False
 		if debug:
 			print '----------------------------------------------------------'
 			print 'GIT:'
@@ -137,16 +137,13 @@ class SideBarGit:
 			except:
 				print message
 
-
-
 	def status(self, message):
 		message = message[:200] + (message[200:] and '…')
 		message = message.replace('\n', ' ')
 		try:
 			sublime.active_window().active_view().set_status('SideBarGit', 'Git : '+(message.decode('utf-8')))
 			sublime.set_timeout(self.statusRemove, 16000)
-		except:
-			#there is no tabs opened
+		except:#there is no tabs opened
 			sublime.status_message('Git : '+(message.decode('utf-8')))
 
 	def statusRemove(self):
