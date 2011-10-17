@@ -8,7 +8,7 @@ class SideBarGit:
 	
 	def run(self, object, modal = False, background = False):
 
-		debug = False
+		debug = True
 		if debug:
 			print '----------------------------------------------------------'
 			print 'GIT:'
@@ -101,6 +101,7 @@ class SideBarGit:
 				view.settings().set('fallback_encoding', 'UTF-8')
 				view.settings().set('encoding', 'UTF-8')
 				view.settings().set('default_dir', object.item.dirname())
+				view.set_scratch(True)
 				edit = view.begin_edit()
 				content = "[SideBarGit@sublime "
 				content += object.item.name().decode('utf-8')
@@ -128,11 +129,18 @@ class SideBarGit:
 		sublime.active_window().show_input_panel(message.decode('utf-8'), default.decode('utf-8'), functools.partial(function, arg1, True), None, None)
 	
 	def alert(self, message):
-		sublime.error_message('Git : '+(message.decode('utf-8')))
+		try:
+			sublime.error_message('Git : '+(message.decode('utf-8')))
+		except:
+			try:
+				sublime.error_message('Git : '+message)
+			except:
+				print message
+
 
 
 	def status(self, message):
-		message = (message[249] + '…') if len(message) > 249 else message
+		message = message[:200] + (message[200:] and '…')
 		message = message.replace('\n', ' ')
 		try:
 			sublime.active_window().active_view().set_status('SideBarGit', 'Git : '+(message.decode('utf-8')))
@@ -142,7 +150,11 @@ class SideBarGit:
 			sublime.status_message('Git : '+(message.decode('utf-8')))
 
 	def statusRemove(self):
-		sublime.active_window().active_view().erase_status('SideBarGit')
+		try:
+			sublime.active_window().active_view().erase_status('SideBarGit')
+		except:#there is no tabs opened
+			pass
+			
 		
 	def getSelectedRepos(self, items):
 		repos = []
