@@ -76,15 +76,15 @@ class SideBarGit:
 			try:
 				strerror
 				if errno == 2:
-					self.alert(strerror+'\nPossible error:\n\t'+object.command[0]+' not found on $PATH')
+					self.alert(strerror+'\nPossible error:\n'+object.command[0]+' not found on $PATH')
 				else:
 					self.alert(strerror)
 				return False
 			except:
 				if not stdout and not stderr:
 					return False
-				if stdout.find('Permission denied') == 0:
-					self.alert((stdout or '')+'\n'+(stderr or '')+'\nPossible error:\n\tssh keys not in .ssh/ directory')
+				if stdout.find('Permission denied') == 0 or stdout.find('fatal: The remote end hung up unexpectedly') == 0:
+					self.alert((stdout or '')+'\n'+(stderr or '')+'\nPossible error:\nssh keys not in .ssh/ directory or keys not opened')
 				else:
 					self.alert((stdout or '')+'\n'+(stderr or ''))
 				return False
