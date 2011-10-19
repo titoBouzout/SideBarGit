@@ -1107,7 +1107,7 @@ class SideBarSelection:
 		return self.hasFilesWithExtension('gif|jpg|jpeg|png')
 
 	def hasFilesWithExtension(self, extensions):
-		extensions = re.compile(extensions+'$', re.I);
+		extensions = re.compile('('+extensions+')$', re.I);
 		for item in self.getSelectedFiles():
 			if extensions.search(item.path()):
 				return True;
@@ -1134,7 +1134,7 @@ class SideBarSelection:
 		
 	def getSelectedFilesWithExtension(self, extensions):
 		items = []
-		extensions = re.compile(extensions+'$', re.I);
+		extensions = re.compile('('+extensions+')$', re.I);
 		for item in self.getSelectedFiles():
 			if extensions.search(item.path()):
 				items.append(item)
