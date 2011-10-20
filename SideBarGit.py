@@ -612,6 +612,7 @@ class SideBarGitPushCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item.repository
 			object.command = ['git','push']
+			object.to_status_bar = True
 			SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -649,6 +650,7 @@ class SideBarGitPushTagsCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item.repository
 			object.command = ['git','push','--tags']
+			object.to_status_bar = True
 			SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -801,7 +803,6 @@ class SideBarGitAddCommitCommand(sublime_plugin.WindowCommand):
 				object.item = repo.repository
 				object.to_status_bar = True
 				object.command = commitCommandCommit
-				object.to_status = True
 				SideBarGit().run(object)
 
 	def is_enabled(self, paths = []):
@@ -828,7 +829,6 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 				object.item = repo.repository
 				object.to_status_bar = True
 				object.command = commitCommandCommit
-				object.to_status = True
 				SideBarGit().run(object)
 				object = SideBarGitItem()
 				object.item = repo.repository
