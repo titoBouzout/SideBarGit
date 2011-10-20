@@ -152,15 +152,16 @@ class SideBarGit:
 		message = message[:200] + (message[200:] and '…')
 		message = message.replace('\n', ' ')
 		try:
-			sublime.active_window().active_view().set_status('SideBarGit', 'Git : '+(message.decode('utf-8')))
-			sublime.set_timeout(self.statusRemove, 16000)
+			v = sublime.active_window().active_view()
+			v.set_status('SideBarGit', 'Git : '+(message.decode('utf-8')))
+			sublime.set_timeout(lambda: SideBarGit().statusRemove(v), 16000)
 		except:#there is no tabs opened
 			sublime.status_message('Git : '+(message.decode('utf-8')))
 
-	def statusRemove(self):
+	def statusRemove(self, v):
 		try:
-			sublime.active_window().active_view().erase_status('SideBarGit')
-		except:#there is no tabs opened
+			v.erase_status('SideBarGit')
+		except:#this view is not there
 			pass
 			
 		
