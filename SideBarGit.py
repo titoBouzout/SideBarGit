@@ -30,13 +30,24 @@ class SideBarGit:
 																	shell= sys.platform == 'win32', 
 																	universal_newlines=True)
 			else:
-				process = subprocess.Popen(
-																	" ".join(object.command),
-																	cwd=object.item.forCwdSystemPath(),
-																	stdout=subprocess.PIPE, 
-																	stderr=subprocess.STDOUT, 
-																	shell=False, 
-																	universal_newlines=True)
+				import sys
+				if sys.platform == 'win32':
+					process = subprocess.Popen(
+																		#" ".join(object.command),
+																		object.command,
+																		cwd=object.item.forCwdSystemPath(),
+																		stdout=subprocess.PIPE, 
+																		stderr=subprocess.STDOUT, 
+																		shell=False, 
+																		universal_newlines=True)
+				else:
+					process = subprocess.Popen(
+																		object.command,
+																		cwd=object.item.forCwdSystemPath(),
+																		stdout=subprocess.PIPE, 
+																		stderr=subprocess.STDOUT, 
+																		shell=False, 
+																		universal_newlines=True)
 
 			if background:
 				if debug:
@@ -525,7 +536,7 @@ class SideBarGitInitCommand(sublime_plugin.WindowCommand):
 			print item.path()
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git init']
+			object.command = ['git', 'init']
 			object.to_status_bar = True
 			SideBarGit().run(object)
 
@@ -557,7 +568,7 @@ class SideBarGitGuiCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git gui']
+			object.command = ['git','gui']
 			SideBarGit().run(object, False, True)
 
 	def is_enabled(self, paths = []):
@@ -600,7 +611,7 @@ class SideBarGitPushCommand(sublime_plugin.WindowCommand):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 			object = SideBarGitItem()
 			object.item = item.repository
-			object.command = ['git push']
+			object.command = ['git','push']
 			SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -615,7 +626,7 @@ class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = SideBarGitItem()
 				object.item = item.repository
-				object.command = [content.encode(sys.getfilesystemencoding())]
+				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -626,7 +637,7 @@ class SideBarGitPushAndPushTagsCommand(sublime_plugin.WindowCommand):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 			object = SideBarGitItem()
 			object.item = item.repository
-			object.command = ['git push && git push --tags']
+			object.command = ['git','push','&&','git','push','--tags']
 			SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -637,7 +648,7 @@ class SideBarGitPushTagsCommand(sublime_plugin.WindowCommand):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 			object = SideBarGitItem()
 			object.item = item.repository
-			object.command = ['git push --tags']
+			object.command = ['git','push','--tags']
 			SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -651,7 +662,7 @@ class SideBarGitPullCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = SideBarGitItem()
 				object.item = item.repository
-				object.command = ['git pull']
+				object.command = ['git','pull']
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -666,7 +677,7 @@ class SideBarGitPullWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = SideBarGitItem()
 				object.item = item.repository
-				object.command = [content.encode(sys.getfilesystemencoding())]
+				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -680,7 +691,7 @@ class SideBarGitFetchCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = SideBarGitItem()
 				object.item = item.repository
-				object.command = ['git fetch']
+				object.command = ['git','fetch']
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -695,7 +706,7 @@ class SideBarGitFetchWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = SideBarGitItem()
 				object.item = item.repository
-				object.command = [content.encode(sys.getfilesystemencoding())]
+				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -821,7 +832,7 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 				SideBarGit().run(object)
 				object = SideBarGitItem()
 				object.item = repo.repository
-				object.command = ['git push']
+				object.command = ['git','push']
 				SideBarGit().run(object, True)
 
 class SideBarGitAddCommand(sublime_plugin.WindowCommand):
