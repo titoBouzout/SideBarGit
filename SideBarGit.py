@@ -655,7 +655,7 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 				object = SideBarGitItem()
 				object.item = item
-				object.command = ['git', 'clone', content.encode(sys.getfilesystemencoding()), '--recursive']
+				object.command = ['git', 'clone', '--recursive', content.encode(sys.getfilesystemencoding())]
 				object.to_status_bar = True
 				if not SideBarGit().run(object, True):
 					failed = True
