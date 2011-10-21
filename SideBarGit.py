@@ -139,6 +139,7 @@ class SideBarGit:
 				view.settings().set('default_dir', object.item.dirname())
 				view.set_scratch(True)
 
+				view.settings().set('SideBarGitIsASideBarGitTab', True)
 				view.settings().set('SideBarGitCommand', object.command)
 				view.settings().set('SideBarGitModal', modal)
 				view.settings().set('SideBarGitBackground', background)
@@ -231,9 +232,9 @@ class SideBarGit:
 
 		return repos
 
-class SideBarGitRefresh(sublime_plugin.TextCommand):
+class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.TextCommand):
 	def run(self, edit):
-		if self.view.settings().has('SideBarGitModal'):
+		if self.view.settings().has('SideBarGitIsASideBarGitTab'):
 			SideBarGit().run(
 												[],
 												self.view.settings().get('SideBarGitModal'),
