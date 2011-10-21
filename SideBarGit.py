@@ -48,11 +48,13 @@ class SideBarGit:
 		if sys.platform == 'win32':
 			object.command = map(self.escapeCMDWindows, object.command)
 
+		cwd = object.item.forCwdSystemPath()
+
 		try:
 			if not modal :
 				process = subprocess.Popen(
 																	object.command, 
-																	cwd=object.item.forCwdSystemPath(), 
+																	cwd=cwd, 
 																	stdout=subprocess.PIPE, 
 																	stderr=subprocess.STDOUT, 
 																	shell= sys.platform == 'win32', 
@@ -62,7 +64,7 @@ class SideBarGit:
 					process = subprocess.Popen(
 																		#" ".join(object.command),
 																		object.command,
-																		cwd=object.item.forCwdSystemPath(),
+																		cwd=cwd,
 																		stdout=subprocess.PIPE, 
 																		stderr=subprocess.STDOUT, 
 																		shell=True, 
@@ -70,7 +72,7 @@ class SideBarGit:
 				else:
 					process = subprocess.Popen(
 																		object.command,
-																		cwd=object.item.forCwdSystemPath(),
+																		cwd=cwd,
 																		stdout=subprocess.PIPE, 
 																		stderr=subprocess.STDOUT, 
 																		shell=False, 
@@ -405,7 +407,7 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-n', '30', '-p', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
-			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -419,7 +421,7 @@ class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-p', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
-			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
