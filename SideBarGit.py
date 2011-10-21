@@ -122,7 +122,7 @@ class SideBarGit:
 					self.alert((stdout or '')+'\n'+(stderr or ''))
 				return False
 		elif stdout != '':
-			if object.to_status_bar or " ".join(object.command).find('git push') == 0 or stdout.find('nothing to commit') == 0:
+			if refresh_funct_view == False and (object.to_status_bar or " ".join(object.command).find('git push') == 0 or stdout.find('nothing to commit') == 0):
 				self.status(stdout)
 			else:
 				if refresh_funct_view == False:
