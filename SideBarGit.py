@@ -18,6 +18,7 @@ class SideBarGit:
 					refresh_funct_to_status_bar = False,
 					refresh_funct_title = False,
 					refresh_funct_no_results = False,
+					refresh_funct_syntax_file = False
 					):
 		
 		if not refresh_funct_view:
@@ -29,6 +30,7 @@ class SideBarGit:
 			object.to_status_bar = refresh_funct_to_status_bar
 			object.title = refresh_funct_title
 			object.no_results = refresh_funct_no_results
+			object.syntax_file = refresh_funct_syntax_file
 
 		debug = False
 		if debug:
@@ -148,7 +150,8 @@ class SideBarGit:
 				except:
 					view.set_name('No Title')
 				try:
-					view.set_syntax_file('Packages/Diff/Diff.tmLanguage')
+					if object.syntax_file != False:
+						view.set_syntax_file(object.syntax_file)
 				except:
 					pass
 				view.settings().set('fallback_encoding', 'UTF-8')
@@ -172,7 +175,11 @@ class SideBarGit:
 				try:
 					view.settings().set('SideBarGitNoResults', object.no_results)
 				except:
-					view.settings().set('SideBarGitNoResults', 'No output to show')
+					view.settings().set('SideBarGitNoResults', 'No output to show')			
+				try:
+					view.settings().set('SideBarGitSyntaxFile', object.syntax_file)
+				except:
+					view.settings().set('SideBarGitSyntaxFile', False)
 
 				content = "[SideBarGit@sublime "
 				content += object.item.name().decode('utf-8')
@@ -189,6 +196,8 @@ class SideBarGit:
 				content += stdout.decode('utf-8')
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
+				view.sel().clear()
+				view.sel().add(sublime.Region(0))
 				view.end_edit(edit)
 		return True
 
@@ -263,8 +272,8 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.TextComma
 												self.view.settings().get('SideBarGitItem'),
 												self.view.settings().get('SideBarGitToStatusBar'),
 												self.view.settings().get('SideBarGitTitle'),
-												self.view.settings().get('SideBarGitNoResults')
-
+												self.view.settings().get('SideBarGitNoResults'),
+												self.view.settings().get('SideBarGitSyntaxFile')
 												)
 
 class SideBarGitItem:
@@ -280,6 +289,7 @@ class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowComman
 			object.command = ['git', 'diff', 'HEAD', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -292,6 +302,7 @@ class SideBarGitDiffChangesNotStagedCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'diff', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -304,6 +315,7 @@ class SideBarGitDiffChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand
 			object.command = ['git', 'diff', '--staged', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -316,6 +328,7 @@ class SideBarGitDiffBetweenIndexAndLastCommitCommand(sublime_plugin.WindowComman
 			object.command = ['git', 'diff', '--cached', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -328,6 +341,7 @@ class SideBarGitDiffBetweenRemoteAndLastLocalCommitCommand(sublime_plugin.Window
 			object.command = ['git', 'diff', 'origin/master..', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -340,6 +354,7 @@ class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.Window
 			object.command = ['git', 'diff', '..origin/master', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -352,6 +367,7 @@ class SideBarGitLogStatLatestCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-n', '30', '--stat', '--graph', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -364,6 +380,7 @@ class SideBarGitLogStatFullCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '--stat', '--graph', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -376,6 +393,7 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-n', '30', '-p', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -389,6 +407,7 @@ class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-p', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -401,6 +420,7 @@ class SideBarGitLogSinceLatestPushCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', 'origin/master..', '--stat', '--graph', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -412,6 +432,7 @@ class SideBarGitBlameCommand(sublime_plugin.WindowCommand):
 			object.item = item
 			object.command = ['git', 'blame', '--', item.forCwdSystemName()]
 			object.title = 'Blame: '+item.name()
+			object.syntax_file = 'Packages/Git/Git Blame.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -423,6 +444,7 @@ class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 			object.item = item
 			object.command = ['git', 'status', '--untracked-files=all', '--', item.forCwdSystemName()]
 			object.title = 'Status: '+item.name()
+			object.syntax_file = 'Packages/Git/Git Commit Message.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
