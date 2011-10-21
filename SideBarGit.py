@@ -62,7 +62,7 @@ class SideBarGit:
 																		cwd=object.item.forCwdSystemPath(),
 																		stdout=subprocess.PIPE, 
 																		stderr=subprocess.STDOUT, 
-																		shell=False, 
+																		shell=True, 
 																		universal_newlines=True)
 				else:
 					process = subprocess.Popen(
