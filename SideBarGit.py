@@ -99,6 +99,11 @@ class SideBarGit:
 			failed = True
 			print errno
 			print strerror
+		except IOError as (errno, strerror):
+			print 'FAILED'
+			failed = True
+			print errno
+			print strerror
 		if debug:
 			print '----------------------------------------------------------'
 
@@ -619,8 +624,12 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 			if os.path.exists(item.join('.gitignore')):
 				item.path(item.join('.gitignore'))
 			else:
-				item.path(item.join('.gitignore'))
-				item.create()
+				if os.path.exists(item.join('.git')):
+					item.path(item.join('.gitignore'))
+					item.create()
+				else:
+					SideBarGit().status('Unable to found repository for "'+original.encode('utf-8')+'"')
+					continue
 			ignore_entry = re.sub('^/+', '', original.replace(item.dirname(), '').replace('\\', '/'))
 			if originalIsDirectory:
 				ignore_entry += '/*'
@@ -635,7 +644,6 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 class SideBarGitInitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
-			print item.path()
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'init']
