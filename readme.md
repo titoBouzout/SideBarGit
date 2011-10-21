@@ -14,6 +14,8 @@ Usage
 * Right click on "multiple/single" "files/folders" of the "tree" sidebar to apply commands on selected files which maybe are from different repositories.
 
 * To apply commands to focused document use the tab context menu.
+
+* Tip: If a command sends output to a tab ( example a diff ), pressing F5 on that tab: will execute the command again and refresh the tab with the new contents ( example the new computed diff )
  
 Provides the following commands
 ------------------
