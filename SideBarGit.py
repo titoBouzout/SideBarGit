@@ -43,9 +43,13 @@ class SideBarGit:
 			print object.item.forCwdSystemName()
 
 		failed = False
+
+		import sys
+		if sys.platform == 'win32':
+			object.command = map(self.escapeCMDWindows, object.command)
+
 		try:
 			if not modal :
-				import sys
 				process = subprocess.Popen(
 																	object.command, 
 																	cwd=object.item.forCwdSystemPath(), 
@@ -54,7 +58,6 @@ class SideBarGit:
 																	shell= sys.platform == 'win32', 
 																	universal_newlines=True)
 			else:
-				import sys
 				if sys.platform == 'win32':
 					process = subprocess.Popen(
 																		#" ".join(object.command),
@@ -164,27 +167,28 @@ class SideBarGit:
 				view.settings().set('default_dir', object.item.dirname())
 				view.set_scratch(True)
 
-				view.settings().set('SideBarGitIsASideBarGitTab', True)
-				view.settings().set('SideBarGitCommand', object.command)
-				view.settings().set('SideBarGitModal', modal)
-				view.settings().set('SideBarGitBackground', background)
-				view.settings().set('SideBarGitItem', object.item.path())
-				try:
-					view.settings().set('SideBarGitToStatusBar', object.to_status_bar)
-				except:
-					view.settings().set('SideBarGitToStatusBar', False)
-				try:
-					view.settings().set('SideBarGitTitle', object.title)
-				except:
-					view.settings().set('SideBarGitTitle', 'No Title')
-				try:
-					view.settings().set('SideBarGitNoResults', object.no_results)
-				except:
-					view.settings().set('SideBarGitNoResults', 'No output to show')			
-				try:
-					view.settings().set('SideBarGitSyntaxFile', object.syntax_file)
-				except:
-					view.settings().set('SideBarGitSyntaxFile', False)
+				if refresh_funct_view == False:
+					view.settings().set('SideBarGitIsASideBarGitTab', True)
+					view.settings().set('SideBarGitCommand', object.command)
+					view.settings().set('SideBarGitModal', modal)
+					view.settings().set('SideBarGitBackground', background)
+					view.settings().set('SideBarGitItem', object.item.path())
+					try:
+						view.settings().set('SideBarGitToStatusBar', object.to_status_bar)
+					except:
+						view.settings().set('SideBarGitToStatusBar', False)
+					try:
+						view.settings().set('SideBarGitTitle', object.title)
+					except:
+						view.settings().set('SideBarGitTitle', 'No Title')
+					try:
+						view.settings().set('SideBarGitNoResults', object.no_results)
+					except:
+						view.settings().set('SideBarGitNoResults', 'No output to show')			
+					try:
+						view.settings().set('SideBarGitSyntaxFile', object.syntax_file)
+					except:
+						view.settings().set('SideBarGitSyntaxFile', False)
 
 				content = "[SideBarGit@sublime "
 				content += object.item.name().decode('utf-8')
@@ -262,8 +266,11 @@ class SideBarGit:
 					repos[index].repository = item
 					repos[index].items = []
 				repos[index].items.append(SideBarItem(original, os.path.isdir(original)))
-
 		return repos
+
+	def escapeCMDWindows(self, string):
+		return string.replace('^', '^^')
+
 
 class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.TextCommand):
 	def run(self, edit):
@@ -832,7 +839,7 @@ class SideBarGitCommitUndoCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = SideBarGitItem()
 				object.item = item.repository
-				object.command = ['git', 'reset', '--soft', 'HEAD~1']# on windows "git reset --soft HEAD^" cause problems.
+				object.command = ['git', 'reset', '--soft', 'HEAD^']
 				SideBarGit().run(object)
 
 	def is_enabled(self, paths = []):
