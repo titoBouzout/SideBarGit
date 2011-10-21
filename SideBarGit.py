@@ -121,10 +121,24 @@ class SideBarGit:
 				else:
 					self.alert((stdout or '')+'\n'+(stderr or ''))
 				return False
-		elif stdout != '':
-			if refresh_funct_view == False and (object.to_status_bar or " ".join(object.command).find('git push') == 0 or stdout.find('nothing to commit') == 0):
+		else:
+			if stdout != '' and refresh_funct_view == False and (object.to_status_bar or " ".join(object.command).find('git push') == 0 or stdout.find('nothing to commit') == 0):
 				self.status(stdout)
 			else:
+				if stdout == '' and refresh_funct_view == False:
+					try:
+						self.status(object.no_results)
+					except:
+						self.status('No output to show')
+					return True
+				if stdout == '' and refresh_funct_view != False:				
+					try:
+						stdout = object.no_results
+					except:
+						stdout = 'No output to show'
+				if stdout == '':
+					return True
+
 				if refresh_funct_view == False:
 					view = sublime.active_window().new_file()
 				else:
@@ -176,11 +190,6 @@ class SideBarGit:
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
 				view.end_edit(edit)
-		else:
-			try:
-				self.status(object.no_results)
-			except:
-				self.status('No output to show')
 		return True
 
 	def confirm(self, message, function, arg1):
