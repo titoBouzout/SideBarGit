@@ -6,7 +6,29 @@ import subprocess
 
 class SideBarGit:
 	
-	def run(self, object, modal = False, background = False):
+	def run(
+					self, 
+					object, 
+					modal = False, 
+					background = False, 
+
+					refresh_funct_view = False,
+					refresh_funct_command = False,
+					refresh_funct_item = False,
+					refresh_funct_to_status_bar = False,
+					refresh_funct_title = False,
+					refresh_funct_no_results = False,
+					):
+		
+		if not refresh_funct_view:
+			pass
+		else:
+			object = SideBarGitItem()
+			object.command = refresh_funct_command
+			object.item = SideBarItem(refresh_funct_item, os.path.isdir(refresh_funct_item))
+			object.to_status_bar = refresh_funct_to_status_bar
+			object.title = refresh_funct_title
+			object.no_results = refresh_funct_no_results
 
 		debug = False
 		if debug:
@@ -103,7 +125,10 @@ class SideBarGit:
 			if object.to_status_bar or object.command[0].find('git push') == 0 or stdout.find('nothing to commit') == 0:
 				self.status(stdout)
 			else:
-				view = sublime.active_window().new_file()
+				if refresh_funct_view == False:
+					view = sublime.active_window().new_file()
+				else:
+					view = refresh_funct_view
 				try:
 					view.set_name(object.title.decode('utf-8'))
 				except:
@@ -113,14 +138,32 @@ class SideBarGit:
 				view.settings().set('encoding', 'UTF-8')
 				view.settings().set('default_dir', object.item.dirname())
 				view.set_scratch(True)
-				edit = view.begin_edit()
+
+				view.settings().set('SideBarGitCommand', object.command)
+				view.settings().set('SideBarGitModal', modal)
+				view.settings().set('SideBarGitBackground', background)
+				view.settings().set('SideBarGitItem', object.item.path())
+				try:
+					view.settings().set('SideBarGitToStatusBar', object.to_status_bar)
+				except:
+					view.settings().set('SideBarGitToStatusBar', False)
+				try:
+					view.settings().set('SideBarGitTitle', object.title)
+				except:
+					view.settings().set('SideBarGitTitle', 'No Title')
+				try:
+					view.settings().set('SideBarGitNoResults', object.no_results)
+				except:
+					view.settings().set('SideBarGitNoResults', 'No output to show')
+
 				content = "[SideBarGit@sublime "
 				content += object.item.name().decode('utf-8')
 				content += "/] "
 				content += (" ".join(object.command)).decode('utf-8')
 				content += "\n\n"
 				content += stdout.decode('utf-8')
-				view.insert(edit, 0, content)
+				edit = view.begin_edit()
+				view.replace(edit, sublime.Region(0, view.size()), content);
 				view.end_edit(edit)
 		else:
 			try:
@@ -187,6 +230,22 @@ class SideBarGit:
 				repos[index].items.append(SideBarItem(original, os.path.isdir(original)))
 
 		return repos
+
+class SideBarGitRefresh(sublime_plugin.TextCommand):
+	def run(self, edit):
+		if self.view.settings().has('SideBarGitModal'):
+			SideBarGit().run(
+												[],
+												self.view.settings().get('SideBarGitModal'),
+												self.view.settings().get('SideBarGitBackground'),
+												self.view,
+												self.view.settings().get('SideBarGitCommand'),
+												self.view.settings().get('SideBarGitItem'),
+												self.view.settings().get('SideBarGitToStatusBar'),
+												self.view.settings().get('SideBarGitTitle'),
+												self.view.settings().get('SideBarGitNoResults')
+
+												)
 
 class SideBarGitItem:
 	pass
