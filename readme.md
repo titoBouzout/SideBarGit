@@ -45,17 +45,17 @@ Status
 Diff
   
 	all changes since the last commit
-	  o git diff git diff HEAD -- "/selected/paths/files/or/and/folders"
+	  o git diff HEAD -- "/selected/paths/files/or/and/folders"
 	changes that have not been staged
-	  o git diff git diff  -- "/selected/paths/files/or/and/folders"
+	  o git diff  -- "/selected/paths/files/or/and/folders"
 	changes that are staged but not committed
-	  o git diff git diff --staged -- "/selected/paths/files/or/and/folders"
+	  o git diff --staged -- "/selected/paths/files/or/and/folders"
 	between the index and last commit
-	  o git diff git diff --cached -- "/selected/paths/files/or/and/folders"	
+	  o git diff --cached -- "/selected/paths/files/or/and/folders"	
 	between remote and last local commit (origin/master..)
-	  o git diff git diff origin/master.. -- "/selected/paths/files/or/and/folders"	
+	  o git diff origin/master.. -- "/selected/paths/files/or/and/folders"	
 	between last local commit and remote (..origin/master)
-	  o git diff git diff ..origin/master -- "/selected/paths/files/or/and/folders"
+	  o git diff ..origin/master -- "/selected/paths/files/or/and/folders"
 	between the two latest tags
 	  o git diff "previousTag".."lastTag" -- "/selected/paths/files/or/and/folders"
 
