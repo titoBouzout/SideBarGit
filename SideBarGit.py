@@ -331,7 +331,7 @@ class SideBarGitLogStatLatestCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'log', '-n', '30', '--stat', '--graph', '--', item.forCwdSystemName()]
-			object.title = 'Log: '+item.name()+'.diff'
+			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -343,7 +343,7 @@ class SideBarGitLogStatFullCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'log', '--stat', '--graph', '--', item.forCwdSystemName()]
-			object.title = 'Log: '+item.name()+'.diff'
+			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -355,7 +355,7 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'log', '-n', '30', '-p', '--', item.forCwdSystemName()]
-			object.title = 'Log: '+item.name()+'.diff'
+			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -368,7 +368,7 @@ class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'log', '-p', '--', item.forCwdSystemName()]
-			object.title = 'Log: '+item.name()+'.diff'
+			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -380,7 +380,7 @@ class SideBarGitLogSinceLatestPushCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'log', 'origin/master..', '--stat', '--graph', '--', item.forCwdSystemName()]
-			object.title = 'Log: '+item.name()+'.diff'
+			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -392,7 +392,7 @@ class SideBarGitBlameCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'blame', '--', item.forCwdSystemName()]
-			object.title = 'Blame: '+item.name()+'.diff'
+			object.title = 'Blame: '+item.name()
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
@@ -403,7 +403,7 @@ class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 			object = SideBarGitItem()
 			object.item = item
 			object.command = ['git', 'status', '--untracked-files=all', '--', item.forCwdSystemName()]
-			object.title = 'Status: '+item.name()+'.diff'
+			object.title = 'Status: '+item.name()
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
