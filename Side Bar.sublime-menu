@@ -41,10 +41,13 @@
 				[
 					{ "caption": "stat last 30", 	  												"command": "side_bar_git_log_stat_latest", 												"args": {"paths": []} },
 					{ "caption": "stat full", 	  												"command": "side_bar_git_log_stat_full", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "extended last 30", 	  												"command": "side_bar_git_log_extended_latest", 												"args": {"paths": []} },
 					{ "caption": "extended full", 	  												"command": "side_bar_git_log_extended_full", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "since latest tag", 	  												"command": "xxxx", 												"args": {"paths": []} },
 					{ "caption": "since latest push", 	  												"command": "side_bar_git_log_since_latest_push", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "between the two latest tags", 	  												"command": "xxxx", 												"args": {"paths": []} }
 				]
 			},
@@ -55,8 +58,10 @@
 				"children":
 				[
 					{ "caption": "Auto-Tag", 	  												"command": "xxxx", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "Add…", 	  												"command": "xxxx", 												"args": {"paths": []} },
 					{ "caption": "Remove…", 	  												"command": "xxxx", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "List", 	  												"command": "xxxx", 												"args": {"paths": []} }
 				]
 			},
@@ -66,9 +71,11 @@
 				"children":
 				[
 					{ "caption": "Discard changes to tracked", 	  												"command": "side_bar_git_revert_tracked", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "Discard changes to tracked, clean untracked", 	  												"command": "side_bar_git_revert_tracked_clean_untracked", 												"args": {"paths": []} },
 					{ "caption": "Discard changes to tracked, clean untracked, unstage", 	  												"command": "side_bar_git_revert_tracked_clean_untracked_unstage", 												"args": {"paths": []} },
 					{ "caption": "Discard changes to tracked, unstage, clean untracked", 	  												"command": "side_bar_git_revert_tracked_unstage_clean_untracked", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "Unstage", 	  												"command": "side_bar_git_revert_unstage", 												"args": {"paths": []} }
 				]
 			},
