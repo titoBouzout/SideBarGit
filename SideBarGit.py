@@ -458,7 +458,7 @@ class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 			object.item = item
 			object.command = ['git', 'status', '--untracked-files=all', '--', item.forCwdSystemName()]
 			object.title = 'Status: '+item.name()
-			object.syntax_file = 'Packages/Git/Git Commit Message.tmLanguage'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
