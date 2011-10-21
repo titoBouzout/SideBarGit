@@ -133,7 +133,10 @@ class SideBarGit:
 					view.set_name(object.title.decode('utf-8'))
 				except:
 					view.set_name('No Title')
-				view.set_syntax_file('Packages/Diff/Diff.tmLanguage')
+				try:
+					view.set_syntax_file('Packages/Diff/Diff.tmLanguage')
+				except:
+					pass
 				view.settings().set('fallback_encoding', 'UTF-8')
 				view.settings().set('encoding', 'UTF-8')
 				view.settings().set('default_dir', object.item.dirname())
@@ -162,6 +165,13 @@ class SideBarGit:
 				content += "/] "
 				content += (" ".join(object.command)).decode('utf-8')
 				content += "\n\n"
+				content += "# Improve this command, the output or the tab title by posting here:"
+				content += "\n"
+				content += "# http://www.sublimetext.com/forum/viewtopic.php?f=5&t=3405"
+				content += "\n"
+				content += "# Tip: F5 will run the command again and refresh the contents of this tab"
+				content += "\n\n"
+			
 				content += stdout.decode('utf-8')
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
