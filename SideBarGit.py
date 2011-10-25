@@ -85,6 +85,7 @@ class SideBarGit:
 				return True
 
 			stdout, stderr = process.communicate()
+			stdout = stdout.strip()
 
 			if stdout.find('fatal:') == 0 or stdout.find('error:') == 0 or stdout.find('Permission denied') == 0 or stderr:
 				print 'FAILED'
@@ -197,7 +198,7 @@ class SideBarGit:
 					except:
 						view.settings().set('SideBarGitSyntaxFile', False)
 
-				content = "[SideBarGit@sublime "
+				content = "[SideBarGit@SublimeText "
 				content += object.item.name().decode('utf-8')
 				content += "/] "
 				content += (" ".join(object.command)).decode('utf-8')
@@ -208,8 +209,8 @@ class SideBarGit:
 				content += "\n"
 				content += "# Tip: F5 will run the command again and refresh the contents of this tab"
 				content += "\n\n"
-
 				content += stdout.decode('utf-8')
+
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
 				view.sel().clear()
@@ -1069,6 +1070,24 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 				object = SideBarGitItem()
 				object.item = repo.repository
 				object.command = command
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('[SideBarGit@SublimeText ./]:', 'git ', self.run, paths)
+		elif content != '':
+			import sys
+			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
+				object = SideBarGitItem()
+				object.item = item
+				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				object.title = content
+				object.no_results = 'No output'
+				object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
 				SideBarGit().run(object)
 
 	def is_enabled(self, paths = []):

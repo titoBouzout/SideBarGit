@@ -132,7 +132,7 @@
 			{ "caption": "Git GUI", 	  												"command": "side_bar_git_gui", 												"args": {"paths": []} },
 			{ "caption": "Gitk", 	  												"command": "side_bar_git_gitk", 												"args": {"paths": []} },
 			{ "caption": "-"},
-			{ "caption": "Liberal Git Command", 	  												"command": "xxxx", 												"args": {"paths": []} }
+			{ "caption": "Liberal Git Command", 	  												"command": "side_bar_git_liberal", 												"args": {"paths": []} }
 		]
 	},
 	{ "caption": "-",                 "id": "side-bar-end-separator" }
