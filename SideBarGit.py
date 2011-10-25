@@ -2,15 +2,15 @@
 import sublime, sublime_plugin
 import os
 import re
-import subprocess 
+import subprocess
 
 class SideBarGit:
-	
+
 	def run(
-					self, 
-					object, 
-					modal = False, 
-					background = False, 
+					self,
+					object,
+					modal = False,
+					background = False,
 
 					refresh_funct_view = False,
 					refresh_funct_command = False,
@@ -20,7 +20,7 @@ class SideBarGit:
 					refresh_funct_no_results = False,
 					refresh_funct_syntax_file = False
 					):
-		
+
 		if not refresh_funct_view:
 			pass
 		else:
@@ -53,11 +53,11 @@ class SideBarGit:
 		try:
 			if not modal :
 				process = subprocess.Popen(
-																	object.command, 
-																	cwd=cwd, 
-																	stdout=subprocess.PIPE, 
-																	stderr=subprocess.STDOUT, 
-																	shell= sys.platform == 'win32', 
+																	object.command,
+																	cwd=cwd,
+																	stdout=subprocess.PIPE,
+																	stderr=subprocess.STDOUT,
+																	shell= sys.platform == 'win32',
 																	universal_newlines=True)
 			else:
 				if sys.platform == 'win32':
@@ -65,17 +65,17 @@ class SideBarGit:
 																		#" ".join(object.command),
 																		object.command,
 																		cwd=cwd,
-																		stdout=subprocess.PIPE, 
-																		stderr=subprocess.STDOUT, 
-																		shell=True, 
+																		stdout=subprocess.PIPE,
+																		stderr=subprocess.STDOUT,
+																		shell=True,
 																		universal_newlines=True)
 				else:
 					process = subprocess.Popen(
 																		object.command,
 																		cwd=cwd,
-																		stdout=subprocess.PIPE, 
-																		stderr=subprocess.STDOUT, 
-																		shell=False, 
+																		stdout=subprocess.PIPE,
+																		stderr=subprocess.STDOUT,
+																		shell=False,
 																		universal_newlines=True)
 
 			if background:
@@ -143,7 +143,7 @@ class SideBarGit:
 					except:
 						self.status('No output to show')
 					return True
-				if stdout == '' and refresh_funct_view != False:				
+				if stdout == '' and refresh_funct_view != False:
 					try:
 						stdout = object.no_results
 					except:
@@ -186,7 +186,7 @@ class SideBarGit:
 					try:
 						view.settings().set('SideBarGitNoResults', object.no_results)
 					except:
-						view.settings().set('SideBarGitNoResults', 'No output to show')			
+						view.settings().set('SideBarGitNoResults', 'No output to show')
 					try:
 						view.settings().set('SideBarGitSyntaxFile', object.syntax_file)
 					except:
@@ -203,7 +203,7 @@ class SideBarGit:
 				content += "\n"
 				content += "# Tip: F5 will run the command again and refresh the contents of this tab"
 				content += "\n\n"
-			
+
 				content += stdout.decode('utf-8')
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
@@ -216,12 +216,12 @@ class SideBarGit:
 		import functools
 		sublime.active_window().run_command('hide_panel');
 		sublime.active_window().show_input_panel("Confirmation Required:", message.decode('utf-8'), functools.partial(function, arg1, True), None, None)
-	
+
 	def prompt(self, message, default, function, arg1):
 		import functools
 		sublime.active_window().run_command('hide_panel');
 		sublime.active_window().show_input_panel(message.decode('utf-8'), default.decode('utf-8'), functools.partial(function, arg1, True), None, None)
-	
+
 	def alert(self, message):
 		try:
 			sublime.error_message('Git : '+(message.decode('utf-8')))
@@ -246,8 +246,8 @@ class SideBarGit:
 			v.erase_status('SideBarGit')
 		except:#this view is not there
 			pass
-			
-		
+
+
 	def getSelectedRepos(self, items):
 		repos = []
 		reposTemp = []
@@ -257,7 +257,7 @@ class SideBarGit:
 				if item.dirname() == item.path():
 					break;
 				item.path(item.dirname())
-			
+
 			if os.path.exists(item.join('.git')):
 				try:
 					index = reposTemp.index(item.path())
@@ -333,7 +333,7 @@ class SideBarGitDiffChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
-	
+
 class SideBarGitDiffBetweenIndexAndLastCommitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
@@ -456,13 +456,13 @@ class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'status', '--untracked-files=all', '--', item.forCwdSystemName()]
+			object.command = ['git', 'status', '--untracked-files=all','--ignored', '--', item.forCwdSystemName()]
 			object.title = 'Status: '+item.name()
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
-  
+
 class SideBarGitRevertTrackedCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], confirm = False, drop_me = ''):
 		failed = False
@@ -606,7 +606,7 @@ class SideBarGitIgnoreOpenCommand(sublime_plugin.WindowCommand):
 				if item.dirname() == item.path():
 					break;
 				item.path(item.dirname())
-			
+
 			if os.path.exists(item.join('.gitignore')):
 				item.path(item.join('.gitignore'))
 			else:
@@ -629,7 +629,7 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 				if item.dirname() == item.path():
 					break;
 				item.path(item.dirname())
-			
+
 			if os.path.exists(item.join('.gitignore')):
 				item.path(item.join('.gitignore'))
 			else:
@@ -1046,7 +1046,7 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
  #  {
 	# var selected = this.getSelectedPathFolder(event);
 	# var obj = this.getPaths(selected);
-	
+
 	# var aMsg = this.s.prompt('[komodin@komodo '+obj.cwdSelected+'] $ ', 'git ');
 	# if(aMsg != '')
 	# {
@@ -1055,7 +1055,7 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 	#   this.s.execute(this.gitPath, obj.sh, obj.outputFile, function(a,b){ kgit.executeObserver(a,b,true)});
 	# }
  #  }
-  
+
  #  }
  #  this.tagAdd = function(event)
  #  {
@@ -1102,7 +1102,7 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 	#   var version = this.repositoryPreference(id, 'version') || 0;
 	# 	  version++;
 	#   this.repositoryPreference(id, 'version', version);
-	
+
 	#   commands += 'cd '+repos.r[id].cwd+'';
 	#   commands += '\n';
 	#   commands += 'git tag "'+this.s.filePathEscape(this.s.now().replace(/-/g, '').substr(2, 6)+'.'+version)+'" >>'+repos.obj.output+' 2>&1';
@@ -1130,7 +1130,7 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 	# var sh = this.s.fileCreateTemporal('kGit.sh', '');
 
 	# this.s.fileWrite(sh, 'cd '+aObj.cwd+' \n echo `git for-each-ref refs/tags --sort=-authordate` \n');
-	
+
 	# var tags = this.run(sh, sh+'.diff', '', false, false, true).split('\n');
 	# 	tags.shift();
 	# 	tags.shift();
@@ -1145,8 +1145,8 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 	# 	tags.reverse();
 	# return tags;
  #  }
-  
- 
+
+
 #  //TODO: hardcoded branch name
 
  #  }
@@ -1199,7 +1199,7 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 class SideBarSelection:
 
 	def __init__(self, paths = []):
-		
+
 		if len(paths) < 1:
 			try:
 				path = sublime.active_window().active_view().file_name()
@@ -1232,7 +1232,7 @@ class SideBarSelection:
 	def hasOnlyFiles(self):
 		self._obtainSelectionInformationBasic()
 		return self._only_files
-	
+
 	def hasImages(self):
 		return self.hasFilesWithExtension('gif|jpg|jpeg|png')
 
@@ -1261,7 +1261,7 @@ class SideBarSelection:
 
 	def getSelectedImages(self):
 		return self.getSelectedFilesWithExtension('gif|jpg|jpeg|png')
-		
+
 	def getSelectedFilesWithExtension(self, extensions):
 		items = []
 		extensions = re.compile('('+extensions+')$', re.I);
@@ -1269,7 +1269,7 @@ class SideBarSelection:
 			if extensions.search(item.path()):
 				items.append(item)
 		return items
-		
+
 	def _obtainSelectionInformationBasic(self):
 		if not self._obtained_selection_information_basic:
 			self._obtained_selection_information_basic = True
@@ -1294,7 +1294,7 @@ class SideBarSelection:
 				self._only_files 	= True
 			elif self._has_directories:
 				self._only_directories = True
-	
+
 	def _obtainSelectionInformationExtended(self):
 		if not self._obtained_selection_information_extended:
 			self._obtained_selection_information_extended = True
@@ -1342,7 +1342,7 @@ class SideBarItem:
 		for directory in SideBarProject().getDirectories():
 			path = re.sub('^'+re.escape(directory), '', path)
 		return path.replace('\\', '/')
-				
+
 	def pathRelativeFromProject(self):
 		return re.sub('^/+', '', self.pathWithoutProject())
 
@@ -1389,7 +1389,7 @@ class SideBarItem:
 			branch = self.dirnameSystem()
 			leaf = path.replace(branch, '').replace('\\', '').replace('/', '')
 			return leaf
-	
+
 	def forCwdSystemPathRelativeFrom(self, relativeFrom):
 		relative = SideBarItem(relativeFrom, os.path.isdir(relativeFrom))
 		path = self.pathSystem().replace(relative.pathSystem(), '').replace('\\', '/')
@@ -1397,7 +1397,7 @@ class SideBarItem:
 			return './'
 		else:
 			return './'+re.sub('^/+', '', path)
-	
+
 	def forCwdSystemPathRelativeFromRecursive(self, relativeFrom):
 		relative = SideBarItem(relativeFrom, os.path.isdir(relativeFrom))
 		path = self.pathSystem().replace(relative.pathSystem(), '').replace('\\', '/')
@@ -1430,29 +1430,29 @@ class SideBarItem:
 	def nameEncoded(self):
 		import urllib
 		return urllib.quote(self.name().encode('utf-8'));
-	
+
 	def namePretty(self):
 		return self.name().replace(self.extension(), '').replace('-', ' ').replace('_', ' ').strip();
 
 	def open(self):
 		import sys
 		if sys.platform == 'darwin':
-			import subprocess 
+			import subprocess
 			subprocess.Popen(['open', '-a', self.path()], shell=True)
 		elif sys.platform == 'win32':
-			import subprocess 
+			import subprocess
 			subprocess.Popen([self.nameSystem()], cwd=self.dirnameSystem(), shell=True)
 		else:
 			sys.path.append(os.path.join(sublime.packages_path(), 'SideBarEnhancements'))
 			import desktop
-			desktop.open(self.path())		
-	
+			desktop.open(self.path())
+
 	def edit(self):
 		sublime.active_window().open_file(self.path())
 
 	def isDirectory(self):
 		return self._is_directory
-	
+
 	def isFile(self):
 		return self.isDirectory() == False
 
@@ -1481,7 +1481,7 @@ class SideBarItem:
 
 	def exists(self):
 		return os.path.isdir(self.path()) or os.path.isfile(self.path())
-	
+
 	def create(self):
 		if self.isDirectory():
 			self.dirnameCreate()
@@ -1512,4 +1512,3 @@ class SideBarItem:
 				shutil.copy2(self.path(), location.path())
 			return True
 
-	
