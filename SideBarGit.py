@@ -502,7 +502,7 @@ class SideBarGitReflogCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'reflog', '--', item.forCwdSystemName()]
+			object.command = ['git', 'reflog', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Reflog: '+item.name()
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
@@ -527,7 +527,7 @@ class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'status', '--untracked-files=all','--ignored', '--', item.forCwdSystemName()]
+			object.command = ['git', 'status', '--untracked-files=all', '--ignored', '--', item.forCwdSystemName()]
 			object.title = 'Status: '+item.name()
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
