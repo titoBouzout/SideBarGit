@@ -300,7 +300,7 @@ class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowComman
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'diff', 'HEAD', '--', item.forCwdSystemName()]
+			object.command = ['git', 'diff', 'HEAD', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -313,7 +313,7 @@ class SideBarGitDiffChangesNotStagedCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'diff', '--', item.forCwdSystemName()]
+			object.command = ['git', 'diff', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -326,7 +326,7 @@ class SideBarGitDiffChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'diff', '--staged', '--', item.forCwdSystemName()]
+			object.command = ['git', 'diff', '--no-color', '--staged', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -339,7 +339,7 @@ class SideBarGitDiffBetweenIndexAndLastCommitCommand(sublime_plugin.WindowComman
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'diff', '--cached', '--', item.forCwdSystemName()]
+			object.command = ['git', 'diff', '--no-color', '--cached', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -352,7 +352,7 @@ class SideBarGitDiffBetweenRemoteAndLastLocalCommitCommand(sublime_plugin.Window
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'diff', 'origin/master..', '--', item.forCwdSystemName()]
+			object.command = ['git', 'diff', '--no-color', 'origin/master..', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -365,7 +365,7 @@ class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.Window
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'diff', '..origin/master', '--', item.forCwdSystemName()]
+			object.command = ['git', 'diff', '--no-color', '..origin/master', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
