@@ -57,6 +57,8 @@
 					{ "caption": "between the two latest tags", 	  						"command": "xxxx", 												"args": {"paths": []} }
 				]
 			},
+			{ "caption": "Reflog", 	  												"command": "side_bar_git_reflog", 												"args": {"paths": []} },
+			{ "caption": "-"},
 			{ "caption": "Blame", 	  												"command": "side_bar_git_blame", 												"args": {"paths": []} },
 			{ "caption": "-"},
 			{

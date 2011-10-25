@@ -378,7 +378,7 @@ class SideBarGitLogStatShortLatestCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', '-n', '30', '--pretty=short', '--decorate', '--no-color', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '-n', '30', '--pretty=short', '--decorate', '--graph', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
@@ -391,7 +391,7 @@ class SideBarGitLogStatShortFullCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', '--pretty=short', '--decorate', '--no-color', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '--pretty=short', '--decorate', '--graph', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
@@ -487,6 +487,18 @@ class SideBarGitLogSinceLatestPushCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', 'origin/master..', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitReflogCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = SideBarGitItem()
+			object.item = item
+			object.command = ['git', 'reflog', '--', item.forCwdSystemName()]
+			object.title = 'Reflog: '+item.name()
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
