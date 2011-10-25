@@ -373,12 +373,38 @@ class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.Window
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitLogStatShortLatestCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = SideBarGitItem()
+			object.item = item
+			object.command = ['git', 'log', '-n', '30', '--pretty=short', '--decorate', '--no-color', '--', item.forCwdSystemName()]
+			object.title = 'Log: '+item.name()
+			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitLogStatShortFullCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = SideBarGitItem()
+			object.item = item
+			object.command = ['git', 'log', '--pretty=short', '--decorate', '--no-color', '--', item.forCwdSystemName()]
+			object.title = 'Log: '+item.name()
+			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
 class SideBarGitLogStatLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', '-n', '30', '--stat', '--graph', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '-n', '30', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
@@ -391,7 +417,35 @@ class SideBarGitLogStatFullCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', '--stat', '--graph', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
+			object.title = 'Log: '+item.name()
+			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitLogStatListLatestCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		import sys
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = SideBarGitItem()
+			object.item = item
+			object.command = ['git', 'log', '-n', '50', '--pretty=format:%s'.encode(sys.getfilesystemencoding()),  '--no-color', '--', item.forCwdSystemName()]
+			object.title = 'Log: '+item.name()
+			object.no_results = 'No log to show'
+			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitLogStatListCommitLatestCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		import sys
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = SideBarGitItem()
+			object.item = item
+			object.command = ['git', 'log', '-n', '50', '--pretty=format:%h %s'.encode(sys.getfilesystemencoding()), '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
@@ -404,7 +458,7 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', '-n', '30', '-p', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '-n', '30', '-p', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -412,13 +466,12 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
-
 class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', '-p', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '-p', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -431,7 +484,7 @@ class SideBarGitLogSinceLatestPushCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'log', 'origin/master..', '--stat', '--graph', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', 'origin/master..', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			object.syntax_file = 'Packages/Git/Git Graph.tmLanguage'
