@@ -164,6 +164,11 @@ class SideBarGit:
 						view.set_syntax_file(object.syntax_file)
 				except:
 					pass
+				try:
+					object.word_wrap
+					view.settings().set('word_wrap', False)
+				except:
+					pass
 				view.settings().set('fallback_encoding', 'UTF-8')
 				view.settings().set('encoding', 'UTF-8')
 				view.settings().set('default_dir', object.item.dirname())
@@ -509,12 +514,13 @@ class SideBarGitBlameCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = SideBarGitItem()
 			object.item = item
-			object.command = ['git', 'blame', '--', item.forCwdSystemName()]
+			object.command = ['git', 'blame', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Blame: '+item.name()
 			object.syntax_file = 'Packages/Git/Git Blame.tmLanguage'
+			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
-		return SideBarSelection(paths).len() > 0
+		return SideBarSelection(paths).hasFiles()
 
 class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
