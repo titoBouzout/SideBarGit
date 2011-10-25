@@ -39,18 +39,26 @@
 				"caption": "Log", "id":"side-bar-git-log",
 				"children":
 				[
-					{ "caption": "stat last 30", 	  												"command": "side_bar_git_log_stat_latest", 												"args": {"paths": []} },
-					{ "caption": "stat full", 	  												"command": "side_bar_git_log_stat_full", 												"args": {"paths": []} },
+					{ "caption": "short summary of changes last 30", 	  				"command": "side_bar_git_log_stat_short_latest", 												"args": {"paths": []} },
+					{ "caption": "short summary of changes full", 	  					"command": "side_bar_git_log_stat_short_full", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "extended last 30", 	  												"command": "side_bar_git_log_extended_latest", 												"args": {"paths": []} },
-					{ "caption": "extended full", 	  												"command": "side_bar_git_log_extended_full", 												"args": {"paths": []} },
+					{ "caption": "summary of changes last 30", 	  							"command": "side_bar_git_log_stat_latest", 												"args": {"paths": []} },
+					{ "caption": "summary of changes full", 	  								"command": "side_bar_git_log_stat_full", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "since latest tag", 	  												"command": "xxxx", 												"args": {"paths": []} },
-					{ "caption": "since latest push", 	  												"command": "side_bar_git_log_since_latest_push", 												"args": {"paths": []} },
+					{ "caption": "list of changes last 50", 	  								"command": "side_bar_git_log_stat_list_latest", 												"args": {"paths": []} },
+					{ "caption": "list of changes last 50 with commit", 	  		"command": "side_bar_git_log_stat_list_commit_latest", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "between the two latest tags", 	  												"command": "xxxx", 												"args": {"paths": []} }
+					{ "caption": "diffs of changes last 30", 	  							"command": "side_bar_git_log_extended_latest", 												"args": {"paths": []} },
+					{ "caption": "diffs of changes full", 	  								"command": "side_bar_git_log_extended_full", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "summary of changes since latest tag", 	  												"command": "xxxx", 												"args": {"paths": []} },
+					{ "caption": "summary of changes since latest push", 	  											"command": "side_bar_git_log_since_latest_push", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "between the two latest tags", 	  						"command": "xxxx", 												"args": {"paths": []} }
 				]
 			},
+			{ "caption": "Reflog", 	  												"command": "side_bar_git_reflog", 												"args": {"paths": []} },
+			{ "caption": "-"},
 			{ "caption": "Blame", 	  												"command": "side_bar_git_blame", 												"args": {"paths": []} },
 			{ "caption": "-"},
 			{
@@ -111,7 +119,7 @@
 			{ "caption": "Clone…", 	  												"command": "side_bar_git_clone", 												"args": {"paths": []} },
 			{ "caption": "Init", 	  												"command": "side_bar_git_init", 												"args": {"paths": []} },
 			{ "caption": "-"},
-			
+
 			{ "caption": "Add", 	  												"command": "side_bar_git_add", 												"args": {"paths": []} },
 			{ "caption": "Remove", 	  												"command": "side_bar_git_remove", 												"args": {"paths": []} },
 			{ "caption": "Remove Keep Local", 	  												"command": "side_bar_git_remove_keep_local", 												"args": {"paths": []} },
