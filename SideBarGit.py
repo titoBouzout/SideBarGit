@@ -4,6 +4,10 @@ import os
 import re
 import subprocess
 
+from SideBarItem import SideBarItem
+from SideBarSelection import SideBarSelection
+from Utils import Object
+
 class SideBarGit:
 
 	def run(
@@ -24,7 +28,7 @@ class SideBarGit:
 		if not refresh_funct_view:
 			pass
 		else:
-			object = SideBarGitItem()
+			object = Object()
 			object.command = refresh_funct_command
 			object.item = SideBarItem(refresh_funct_item, os.path.isdir(refresh_funct_item))
 			object.to_status_bar = refresh_funct_to_status_bar
@@ -253,7 +257,6 @@ class SideBarGit:
 		except:#this view is not there
 			pass
 
-
 	def getSelectedRepos(self, items):
 		repos = []
 		reposTemp = []
@@ -270,7 +273,7 @@ class SideBarGit:
 				except ValueError:
 					reposTemp.append(item.path())
 					index = reposTemp.index(item.path())
-					repos.append(SideBarGitItem())
+					repos.append(Object())
 					repos[index].repository = item
 					repos[index].items = []
 				repos[index].items.append(SideBarItem(original, os.path.isdir(original)))
@@ -296,15 +299,12 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.TextComma
 												self.view.settings().get('SideBarGitSyntaxFile')
 												)
 
-class SideBarGitItem:
-	pass
-
 #Following code for selected files or folders
 
 class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', 'HEAD', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
@@ -317,7 +317,7 @@ class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowComman
 class SideBarGitDiffChangesNotStagedCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
@@ -330,7 +330,7 @@ class SideBarGitDiffChangesNotStagedCommand(sublime_plugin.WindowCommand):
 class SideBarGitDiffChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', '--no-color', '--staged', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
@@ -343,7 +343,7 @@ class SideBarGitDiffChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand
 class SideBarGitDiffBetweenIndexAndLastCommitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', '--no-color', '--cached', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
@@ -356,7 +356,7 @@ class SideBarGitDiffBetweenIndexAndLastCommitCommand(sublime_plugin.WindowComman
 class SideBarGitDiffBetweenRemoteAndLastLocalCommitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', '--no-color', 'origin/master..', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
@@ -369,7 +369,7 @@ class SideBarGitDiffBetweenRemoteAndLastLocalCommitCommand(sublime_plugin.Window
 class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', '--no-color', '..origin/master', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
@@ -382,7 +382,7 @@ class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.Window
 class SideBarGitLogStatShortLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '-n', '30', '--pretty=short', '--decorate', '--graph', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -395,7 +395,7 @@ class SideBarGitLogStatShortLatestCommand(sublime_plugin.WindowCommand):
 class SideBarGitLogStatShortFullCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '--pretty=short', '--decorate', '--graph', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -408,7 +408,7 @@ class SideBarGitLogStatShortFullCommand(sublime_plugin.WindowCommand):
 class SideBarGitLogStatLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '-n', '30', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -421,7 +421,7 @@ class SideBarGitLogStatLatestCommand(sublime_plugin.WindowCommand):
 class SideBarGitLogStatFullCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -435,7 +435,7 @@ class SideBarGitLogStatListLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		import sys
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '-n', '50', '--pretty=format:%s'.encode(sys.getfilesystemencoding()),  '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -449,7 +449,7 @@ class SideBarGitLogStatListCommitLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		import sys
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '-n', '50', '--pretty=format:%h %s'.encode(sys.getfilesystemencoding()), '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -462,7 +462,7 @@ class SideBarGitLogStatListCommitLatestCommand(sublime_plugin.WindowCommand):
 class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '-n', '30', '-p', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -475,7 +475,7 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', '-p', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -488,7 +488,7 @@ class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 class SideBarGitLogSinceLatestPushCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'log', 'origin/master..', '--stat', '--graph', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
@@ -501,7 +501,7 @@ class SideBarGitLogSinceLatestPushCommand(sublime_plugin.WindowCommand):
 class SideBarGitReflogCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'reflog', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Reflog: '+item.name()
@@ -513,7 +513,7 @@ class SideBarGitReflogCommand(sublime_plugin.WindowCommand):
 class SideBarGitBlameCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'blame', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Blame: '+item.name()
@@ -526,7 +526,7 @@ class SideBarGitBlameCommand(sublime_plugin.WindowCommand):
 class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'status', '--untracked-files=all', '--ignored', '--', item.forCwdSystemName()]
 			object.title = 'Status: '+item.name()
@@ -542,7 +542,7 @@ class SideBarGitRevertTrackedCommand(sublime_plugin.WindowCommand):
 			SideBarGit().confirm('Discard changes to tracked on selected items? ', self.run, paths)
 		else:
 			for item in SideBarSelection(paths).getSelectedItems():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'checkout', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
@@ -559,12 +559,12 @@ class SideBarGitRevertTrackedCleanUntrackedCommand(sublime_plugin.WindowCommand)
 			SideBarGit().confirm('Discard changes to tracked and clean untracked on selected items? ', self.run, paths)
 		else:
 			for item in SideBarSelection(paths).getSelectedItems():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'checkout', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
 					failed = True
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'clean', '-f', '-d', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
@@ -582,17 +582,17 @@ class SideBarGitRevertTrackedCleanUntrackedUnstageCommand(sublime_plugin.WindowC
 			SideBarGit().confirm('Discard changes to tracked, clean untracked and unstage on selected items? ', self.run, paths)
 		else:
 			for item in SideBarSelection(paths).getSelectedItems():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'checkout', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
 					failed = True
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'clean', '-f', '-d', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
 					failed = True
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'reset', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
@@ -610,17 +610,17 @@ class SideBarGitRevertTrackedUnstageCleanUntrackedCommand(sublime_plugin.WindowC
 			SideBarGit().confirm('Discard changes to tracked, unstage and clean untracked on selected items? ', self.run, paths)
 		else:
 			for item in SideBarSelection(paths).getSelectedItems():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'checkout', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
 					failed = True
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'reset', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
 					failed = True
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'clean', '-f', '-d', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
@@ -638,7 +638,7 @@ class SideBarGitRevertUnstageCommand(sublime_plugin.WindowCommand):
 			SideBarGit().confirm('Unstage selected items? ', self.run, paths)
 		else:
 			for item in SideBarSelection(paths).getSelectedItems():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'reset', 'HEAD', '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
@@ -657,7 +657,7 @@ class SideBarGitCheckoutToCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarSelection(paths).getSelectedItems():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'checkout', content.encode(sys.getfilesystemencoding()), '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
@@ -725,7 +725,7 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 class SideBarGitInitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git', 'init']
 			object.to_status_bar = True
@@ -742,7 +742,7 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = ['git', 'clone', '--recursive', content.encode(sys.getfilesystemencoding())]
 				object.to_status_bar = True
@@ -757,7 +757,7 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 class SideBarGitGuiCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['git','gui']
 			SideBarGit().run(object, False, True)
@@ -768,7 +768,7 @@ class SideBarGitGuiCommand(sublime_plugin.WindowCommand):
 class SideBarGitGitkCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False):
 		for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item
 			object.command = ['gitk']
 			SideBarGit().run(object, False, True)
@@ -786,7 +786,7 @@ class SideBarGitCheckoutRepositoryToCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = ['git', 'checkout', content.encode(sys.getfilesystemencoding())]
 				if not SideBarGit().run(object):
@@ -800,7 +800,7 @@ class SideBarGitCheckoutRepositoryToCommand(sublime_plugin.WindowCommand):
 class SideBarGitPushCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item.repository
 			object.command = ['git','push']
 			object.to_status_bar = True
@@ -816,9 +816,10 @@ class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				object.to_status_bar = True
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -827,9 +828,10 @@ class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 class SideBarGitPushAndPushTagsCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item.repository
 			object.command = ['git','push','&&','git','push','--tags']
+			object.to_status_bar = True
 			SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -838,7 +840,7 @@ class SideBarGitPushAndPushTagsCommand(sublime_plugin.WindowCommand):
 class SideBarGitPushTagsCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-			object = SideBarGitItem()
+			object = Object()
 			object.item = item.repository
 			object.command = ['git','push','--tags']
 			object.to_status_bar = True
@@ -853,7 +855,7 @@ class SideBarGitPullCommand(sublime_plugin.WindowCommand):
 			SideBarGit().confirm('Pull from default? ', self.run, paths)
 		else:
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = ['git','pull']
 				SideBarGit().run(object, True)
@@ -868,7 +870,7 @@ class SideBarGitPullWithOptionsCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
 				SideBarGit().run(object, True)
@@ -882,7 +884,7 @@ class SideBarGitFetchCommand(sublime_plugin.WindowCommand):
 			SideBarGit().confirm('Fetch from default? ', self.run, paths)
 		else:
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = ['git','fetch']
 				SideBarGit().run(object, True)
@@ -897,7 +899,7 @@ class SideBarGitFetchWithOptionsCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
 				SideBarGit().run(object, True)
@@ -911,7 +913,7 @@ class SideBarGitCommitUndoCommand(sublime_plugin.WindowCommand):
 			SideBarGit().confirm('Undo Commit? ', self.run, paths)
 		else:
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.command = ['git', 'reset', '--soft', 'HEAD^']
 				SideBarGit().run(object)
@@ -932,7 +934,7 @@ class SideBarGitCommitCommand(sublime_plugin.WindowCommand):
 				commitCommand = ['git', 'commit', '-m', content, '--']
 				for item in repo.items:
 					commitCommand.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.to_status_bar = True
 				object.command = commitCommand
@@ -949,7 +951,7 @@ class SideBarGitCommitAllCommand(sublime_plugin.WindowCommand):
 			import sys
 			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item.repository
 				object.to_status_bar = True
 				object.command = ['git', 'commit', '-a', '-m', content]
@@ -964,7 +966,7 @@ class SideBarGitCommitAmendCommand(sublime_plugin.WindowCommand):
 			commitCommand = ['git', 'commit', '--amend', '-C', 'HEAD', '--']
 			for item in repo.items:
 				commitCommand.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
-			object = SideBarGitItem()
+			object = Object()
 			object.item = repo.repository
 			object.to_status_bar = True
 			object.command = commitCommand
@@ -986,11 +988,11 @@ class SideBarGitAddCommitCommand(sublime_plugin.WindowCommand):
 				for item in repo.items:
 					commitCommandAdd.append(item.forCwdSystemPathRelativeFromRecursive(repo.repository.path()))
 					commitCommandCommit.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.command = commitCommandAdd
 				SideBarGit().run(object)
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.to_status_bar = True
 				object.command = commitCommandCommit
@@ -1012,16 +1014,16 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 				for item in repo.items:
 					commitCommandAdd.append(item.forCwdSystemPathRelativeFromRecursive(repo.repository.path()))
 					commitCommandCommit.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.command = commitCommandAdd
 				SideBarGit().run(object)
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.to_status_bar = True
 				object.command = commitCommandCommit
 				SideBarGit().run(object)
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.command = ['git','push']
 				SideBarGit().run(object, True)
@@ -1032,7 +1034,7 @@ class SideBarGitAddCommand(sublime_plugin.WindowCommand):
 			command = ['git', 'add', '--']
 			for item in repo.items:
 				command.append(item.forCwdSystemPathRelativeFromRecursive(repo.repository.path()))
-			object = SideBarGitItem()
+			object = Object()
 			object.item = repo.repository
 			object.command = command
 			SideBarGit().run(object)
@@ -1049,7 +1051,7 @@ class SideBarGitRemoveKeepLocalCommand(sublime_plugin.WindowCommand):
 				command = ['git', 'rm', '-r', '--cached', '--']
 				for item in repo.items:
 					command.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.command = command
 				object.to_status_bar = True
@@ -1067,7 +1069,7 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 				command = ['git', 'rm', '-r', '-f', '--']
 				for item in repo.items:
 					command.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
-				object = SideBarGitItem()
+				object = Object()
 				object.item = repo.repository
 				object.command = command
 				SideBarGit().run(object)
@@ -1082,7 +1084,7 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 		elif content != '':
 			import sys
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
-				object = SideBarGitItem()
+				object = Object()
 				object.item = item
 				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
 				object.title = content
@@ -1284,321 +1286,3 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 	#   this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	# }
  #  }
-
-
-class SideBarSelection:
-
-	def __init__(self, paths = []):
-
-		if len(paths) < 1:
-			try:
-				path = sublime.active_window().active_view().file_name()
-				if path != '' and path != '.' and path != '..' and path != './' and path != '/' and path != '//' and path != '\\' and path != '\\\\':
-					paths = [path]
-				else:
-					paths = []
-			except:
-				paths = []
-		self._paths = paths
-
-		self._obtained_selection_information_basic = False
-		self._obtained_selection_information_extended = False
-
-	def len(self):
-		return len(self._paths)
-
-	def hasDirectories(self):
-		self._obtainSelectionInformationBasic()
-		return self._has_directories
-
-	def hasFiles(self):
-		self._obtainSelectionInformationBasic()
-		return self._has_files
-
-	def hasOnlyDirectories(self):
-		self._obtainSelectionInformationBasic()
-		return self._only_directories
-
-	def hasOnlyFiles(self):
-		self._obtainSelectionInformationBasic()
-		return self._only_files
-
-	def hasImages(self):
-		return self.hasFilesWithExtension('gif|jpg|jpeg|png')
-
-	def hasFilesWithExtension(self, extensions):
-		extensions = re.compile('('+extensions+')$', re.I);
-		for item in self.getSelectedFiles():
-			if extensions.search(item.path()):
-				return True;
-		return False
-
-	def getSelectedItems(self):
-		self._obtainSelectionInformationExtended()
-		return self._files + self._directories;
-
-	def getSelectedDirectories(self):
-		self._obtainSelectionInformationExtended()
-		return self._directories;
-
-	def getSelectedFiles(self):
-		self._obtainSelectionInformationExtended()
-		return self._files;
-
-	def getSelectedDirectoriesOrDirnames(self):
-		self._obtainSelectionInformationExtended()
-		return self._directories_or_dirnames;
-
-	def getSelectedImages(self):
-		return self.getSelectedFilesWithExtension('gif|jpg|jpeg|png')
-
-	def getSelectedFilesWithExtension(self, extensions):
-		items = []
-		extensions = re.compile('('+extensions+')$', re.I);
-		for item in self.getSelectedFiles():
-			if extensions.search(item.path()):
-				items.append(item)
-		return items
-
-	def _obtainSelectionInformationBasic(self):
-		if not self._obtained_selection_information_basic:
-			self._obtained_selection_information_basic = True
-
-			self._has_directories = False
-			self._has_files = False
-			self._only_directories = False
-			self._only_files = False
-
-			for path in self._paths:
-				if self._has_directories == False and os.path.isdir(path):
-					self._has_directories = True
-				if self._has_files == False and os.path.isdir(path) == False:
-					self._has_files = True
-				if self._has_files and self._has_directories:
-					break
-
-			if self._has_files and self._has_directories:
-				self._only_directories = False
-				self._only_files 	= False
-			elif self._has_files:
-				self._only_files 	= True
-			elif self._has_directories:
-				self._only_directories = True
-
-	def _obtainSelectionInformationExtended(self):
-		if not self._obtained_selection_information_extended:
-			self._obtained_selection_information_extended = True
-
-			self._directories = []
-			self._files = []
-			#selected directories and/or the dirname of selected files if any
-			self._directories_or_dirnames = []
-
-			for path in self._paths:
-				if os.path.isdir(path):
-					item = SideBarItem(path, True)
-					if item not in self._directories:
-						self._directories.append(item)
-					if item not in self._directories_or_dirnames:
-						self._directories_or_dirnames.append(item)
-				else:
-					item = SideBarItem(path, False)
-					if item not in self._files:
-						self._files.append(item)
-					item = SideBarItem(os.path.dirname(path), True)
-					if item not in self._directories_or_dirnames:
-						self._directories_or_dirnames.append(item)
-
-class SideBarItem:
-
-	def __init__(self, path, is_directory):
-		self._path = path
-		self._is_directory = is_directory
-
-	def path(self, path = ''):
-		if path == '':
-			return self._path
-		else:
-			self._path = path
-			self._is_directory = os.path.isdir(path)
-			return path
-
-	def pathSystem(self):
-		import sys
-		return self.path().encode(sys.getfilesystemencoding())
-
-	def pathWithoutProject(self):
-		path = self.path()
-		for directory in SideBarProject().getDirectories():
-			path = re.sub('^'+re.escape(directory), '', path)
-		return path.replace('\\', '/')
-
-	def pathRelativeFromProject(self):
-		return re.sub('^/+', '', self.pathWithoutProject())
-
-	def pathRelativeFromProjectEncoded(self):
-		import urllib
-		return urllib.quote(self.pathRelativeFromProject().encode('utf-8'))
-
-	def pathRelativeFromView(self):
-		return os.path.relpath(self.path(), os.path.dirname(sublime.active_window().active_view().file_name())).replace('\\', '/')
-
-	def pathRelativeFromViewEncoded(self):
-		import urllib
-		return urllib.quote(os.path.relpath(self.path(), os.path.dirname(sublime.active_window().active_view().file_name())).replace('\\', '/').encode('utf-8'))
-
-	def pathAbsoluteFromProject(self):
-		return self.pathWithoutProject()
-
-	def pathAbsoluteFromProjectEncoded(self):
-		import urllib
-		return urllib.quote(self.pathAbsoluteFromProject().encode('utf-8'))
-
-	def uri(self):
-		import urllib
-		return 'file:'+urllib.pathname2url(self.path().encode('utf-8'));
-
-	def join(self, name):
-		return os.path.join(self.path(), name)
-
-	def dirname(self):
-		branch, leaf = os.path.split(self.path())
-		return branch;
-
-	def forCwdSystemPath(self):
-		if self.isDirectory():
-			return self.pathSystem()
-		else:
-			return self.dirnameSystem()
-
-	def forCwdSystemName(self):
-		if self.isDirectory():
-			return './'
-		else:
-			path = self.pathSystem()
-			branch = self.dirnameSystem()
-			leaf = path.replace(branch, '').replace('\\', '').replace('/', '')
-			return leaf
-
-	def forCwdSystemPathRelativeFrom(self, relativeFrom):
-		relative = SideBarItem(relativeFrom, os.path.isdir(relativeFrom))
-		path = self.pathSystem().replace(relative.pathSystem(), '').replace('\\', '/')
-		if path == '':
-			return './'
-		else:
-			return './'+re.sub('^/+', '', path)
-
-	def forCwdSystemPathRelativeFromRecursive(self, relativeFrom):
-		relative = SideBarItem(relativeFrom, os.path.isdir(relativeFrom))
-		path = self.pathSystem().replace(relative.pathSystem(), '').replace('\\', '/')
-		if path == '':
-			return './'
-		else:
-			if self.isDirectory():
-				return './'+re.sub('^/+', '', path)+'/'
-			else:
-				return './'+re.sub('^/+', '', path)
-
-	def dirnameSystem(self):
-		import sys
-		return self.dirname().encode(sys.getfilesystemencoding())
-
-	def dirnameCreate(self):
-		try:
-			os.makedirs(self.dirname())
-		except:
-			pass
-
-	def name(self):
-		branch, leaf = os.path.split(self.path())
-		return leaf;
-
-	def nameSystem(self):
-		import sys
-		return self.name().encode(sys.getfilesystemencoding())
-
-	def nameEncoded(self):
-		import urllib
-		return urllib.quote(self.name().encode('utf-8'));
-
-	def namePretty(self):
-		return self.name().replace(self.extension(), '').replace('-', ' ').replace('_', ' ').strip();
-
-	def open(self):
-		import sys
-		if sys.platform == 'darwin':
-			import subprocess
-			subprocess.Popen(['open', '-a', self.path()], shell=True)
-		elif sys.platform == 'win32':
-			import subprocess
-			subprocess.Popen([self.nameSystem()], cwd=self.dirnameSystem(), shell=True)
-		else:
-			sys.path.append(os.path.join(sublime.packages_path(), 'SideBarEnhancements'))
-			import desktop
-			desktop.open(self.path())
-
-	def edit(self):
-		sublime.active_window().open_file(self.path())
-
-	def isDirectory(self):
-		return self._is_directory
-
-	def isFile(self):
-		return self.isDirectory() == False
-
-	def contentUTF8(self):
-		import codecs
-		return codecs.open(self.path(), 'r', 'utf-8').read()
-
-	def contentBinary(self):
-		return file(self.path(), "rb").read()
-
-	def contentBase64(self):
-		return 'data:'+self.mime()+';base64,'+(file(self.path(), "rb").read().encode("base64").replace('\n', ''))
-
-	def reveal(self):
-		sublime.active_window().run_command("open_dir", {"dir": self.dirname(), "file": self.name()} )
-
-	def write(self, content):
-		file(self.path(), 'w+').write(content)
-
-	def mime(self):
-		import mimetypes
-		return mimetypes.guess_type(self.path())[0] or 'application/octet-stream'
-
-	def extension(self):
-		return os.path.splitext('name'+self.name())[1].lower()
-
-	def exists(self):
-		return os.path.isdir(self.path()) or os.path.isfile(self.path())
-
-	def create(self):
-		if self.isDirectory():
-			self.dirnameCreate()
-			os.makedirs(self.path())
-		else:
-			self.dirnameCreate()
-			self.write('')
-
-	def move(self, location):
-		location = SideBarItem(location, os.path.isdir(location));
-		if location.exists():
-			return False
-		else:
-			location.dirnameCreate();
-			os.rename(self.path(), location.path())
-			return True
-
-	def copy(self, location):
-		location = SideBarItem(location, os.path.isdir(location));
-		if location.exists():
-			return False
-		else:
-			location.dirnameCreate();
-			import shutil
-			if self.isDirectory():
-				shutil.copytree(self.path(), location.path())
-			else:
-				shutil.copy2(self.path(), location.path())
-			return True
-
