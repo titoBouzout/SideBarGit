@@ -78,13 +78,13 @@
 				"caption": "Revert", "id":"side-bar-git-revert",
 				"children":
 				[
-					{ "caption": "Discard changes to tracked", 	  												"command": "side_bar_git_revert_tracked", 												"args": {"paths": []} },
+					{ "caption": "discard changes to tracked", 	  												"command": "side_bar_git_revert_tracked", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "Discard changes to tracked, clean untracked", 	  												"command": "side_bar_git_revert_tracked_clean_untracked", 												"args": {"paths": []} },
-					{ "caption": "Discard changes to tracked, clean untracked, unstage", 	  												"command": "side_bar_git_revert_tracked_clean_untracked_unstage", 												"args": {"paths": []} },
-					{ "caption": "Discard changes to tracked, unstage, clean untracked", 	  												"command": "side_bar_git_revert_tracked_unstage_clean_untracked", 												"args": {"paths": []} },
+					{ "caption": "discard changes to tracked, clean untracked", 	  												"command": "side_bar_git_revert_tracked_clean_untracked", 												"args": {"paths": []} },
+					{ "caption": "discard changes to tracked, clean untracked, unstage", 	  												"command": "side_bar_git_revert_tracked_clean_untracked_unstage", 												"args": {"paths": []} },
+					{ "caption": "discard changes to tracked, unstage, clean untracked", 	  												"command": "side_bar_git_revert_tracked_unstage_clean_untracked", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "Unstage", 	  												"command": "side_bar_git_revert_unstage", 												"args": {"paths": []} }
+					{ "caption": "unstage", 	  												"command": "side_bar_git_revert_unstage", 												"args": {"paths": []} }
 				]
 			},
 			{ "caption": "-"},
