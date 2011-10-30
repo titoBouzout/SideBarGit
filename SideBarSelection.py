@@ -13,10 +13,10 @@ class SideBarSelection:
 		if len(paths) < 1:
 			try:
 				path = sublime.active_window().active_view().file_name()
-				if path != '' and path != '.' and path != '..' and path != './' and path != '/' and path != '//' and path != '\\' and path != '\\\\':
-					paths = [path]
-				else:
+				if self.isNone(path):
 					paths = []
+				else:
+					paths = [path]
 			except:
 				paths = []
 		self._paths = paths
@@ -173,8 +173,8 @@ class SideBarSelection:
 			new_list.append(item)
 		return new_list
 
-	def refreshSidebar(self):
-		try:
-			sublime.active_window().run_command('refresh_folder_list');
-		except:
-			pass
+	def isNone(self, path):
+		if path == None or path == '' or path == '.' or path == '..' or path == './' or path == '/' or path == '//' or path == '\\' or path == '\\\\' or path == '\\\\\\\\':
+			return True
+		else:
+			return False
