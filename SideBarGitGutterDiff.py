@@ -1,0 +1,163 @@
+import sublime
+import sublime_plugin
+import functools
+import threading
+import subprocess
+import sys
+import re
+import tempfile
+import codecs
+import os
+
+from SideBarGit import SideBarGit
+from SideBarItem import SideBarItem
+from Utils import Object
+
+Object.running = False
+
+class SideBarGitGutterDiff(sublime_plugin.EventListener):
+
+	def on_load(self, view):
+		self.run(view)
+
+	def on_modified(self, view):
+		self.run(view)
+
+	def on_post_save(self, view):
+		self.run(view)
+
+	def run(self, view):
+		if Object.running == False and view.file_name() != None and view.file_name() != '':
+			Object.running = True
+			# cache file repository ( if any )
+			if not view.settings().has('SideBarGitGutterRepository'):
+				item = SideBarItem(view.file_name(), False)
+				_item = SideBarItem(view.file_name(), False)
+				repos = SideBarGit().getSelectedRepos([_item])
+				if len(repos) > 0:
+					view.settings().set('SideBarGitGutterRepository', repos[0].repository.path())
+					view.settings().set('SideBarGitGutterCWD', repos[0].repository.path())
+					view.settings().set('SideBarGitGutterPath', item.forCwdSystemPathRelativeFrom(repos[0].repository.path()))
+				else:
+					view.settings().set('SideBarGitGutterRepository', '')
+			
+			# if in a repo check for modifications
+			repo =  view.settings().get('SideBarGitGutterRepository')
+			if repo != '':
+				SideBarGitGutterDiffThread(
+																		view,
+																		repo,
+																		view.settings().get('SideBarGitGutterCWD'),
+																		view.settings().get('SideBarGitGutterPath'),
+																		view.substr(sublime.Region(0, view.size()))
+																		).start()
+			else:
+				Object.running = False
+
+class SideBarGitGutterDiffThread(threading.Thread):
+
+	def __init__(self, view, repo, cwd, path, content):
+		threading.Thread.__init__(self)
+		self.view = view
+		self.repo = repo
+		self.cwd = cwd
+		self.path = path
+		self.content = content
+
+	def run(self):
+
+		tmp = tempfile.NamedTemporaryFile(delete=False)
+		codecs.open(tmp.name, 'w+', 'utf-8').write(self.content)
+
+		comand = ['git', 'diff', '-p', '--unified=0', '--no-color', '--ignore-all-space', '--ignore-space-at-eol', '--ignore-space-change', 'HEAD:'+self.path, tmp.name]
+
+		process = subprocess.Popen(
+																comand,
+																cwd=self.cwd,
+																stdout=subprocess.PIPE,
+																stderr=subprocess.STDOUT,
+																shell=sys.platform == 'win32',
+																universal_newlines=True)
+
+		stdout, stderr = process.communicate()
+		if stdout != '' and stdout.find('fatal:') != 0:
+
+			hunk = re.finditer('\n@@ -([0-9]+),?([0-9]*) \+([0-9]+),?([0-9]*) @@', stdout)
+
+			additions = []
+			deletions = []
+			changes = []
+
+			for change in hunk:
+				g = []
+				for group in change.groups():
+					if group == '':
+						g.append(1)
+					else:
+						g.append(int(group))
+				deleted = g[1]
+				added   = g[3]
+
+				if deleted == added and added == 1:
+					changes.append([g[2]-1,  g[2]]);
+				else:
+					if deleted > 0:
+						if deleted == 1:
+							if added > deleted:
+								deletions.append([g[2], g[2]+deleted-added]);
+							else:
+								deletions.append([g[2], g[2]+1]);
+						else:
+							deletions.append([g[2]-1, g[2]+deleted-1])
+					if added > 0:
+						if added == 1:
+							additions.append([g[2], g[2]+added]);
+						else:
+							additions.append([g[2]-1, g[2]+added-1])
+			tmp.close();
+			os.remove(tmp.name)
+			sublime.set_timeout(functools.partial(self.add_regions, additions, deletions, changes), 0)
+		else:
+			tmp.close();
+			os.remove(tmp.name)
+			sublime.set_timeout(functools.partial(self.erase_regions), 0)
+			if stdout.find('fatal:'):
+				sublime.set_timeout(functools.partial(self.mark_not_in_a_repository), 0)
+		Object.running = False
+
+	def add_regions(self, additions, deletions, changes):
+
+		self.erase_regions()
+
+		rs = []
+		for r in additions:
+			while r[0] != r[1]:
+				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
+				r[0] = r[0]+1
+		if len(rs):
+			self.view.add_regions("git.diff.additions", rs, "number", "dot", sublime.HIDDEN)
+
+		rs = []
+		for r in deletions:
+			while r[0] != r[1]:
+				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
+				r[0] = r[0]+1
+		if len(rs):
+			self.view.add_regions("git.diff.deletions", rs, "entity.name.class", "dot", sublime.HIDDEN)
+
+		rs = []
+		for r in changes:
+			while r[0] != r[1]:
+				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
+				r[0] = r[0]+1
+		if len(rs):
+			self.view.add_regions("git.diff.changes", rs, "string", "dot", sublime.HIDDEN)
+
+
+	def erase_regions(self):
+		self.view.erase_regions("git.diff.additions")
+		self.view.erase_regions("git.diff.deletions")
+		self.view.erase_regions("git.diff.changes")
+
+	def mark_not_in_a_repository(self):
+		self.view.settings().set('SideBarGitGutterRepository', '')
