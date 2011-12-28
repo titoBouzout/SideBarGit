@@ -1,5 +1,5 @@
 # coding=utf8
-import sublime_plugin
+import sublime_plugin, sublime
 import os
 import re
 
@@ -473,7 +473,7 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		failed = False
 		if input == False:
-			SideBarGit().prompt('Enter URL to clone: ', '', self.run, paths)
+			SideBarGit().prompt('Enter URL to clone: ', sublime.get_clipboard(), self.run, paths)
 		elif content != '':
 			import sys
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
