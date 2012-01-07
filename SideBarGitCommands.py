@@ -762,6 +762,9 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 				object.item = repo.repository
 				object.command = ['git','push']
 				SideBarGit().run(object, True)
+	
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
 
 class SideBarGitAddCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
