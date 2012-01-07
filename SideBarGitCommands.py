@@ -1046,6 +1046,17 @@ class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
  
+class SideBarGitRebaseCurrentIntoMasterCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'rebase', 'master']
+			SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
  #  }
  #  this.tagAdd = function(event)
  #  {

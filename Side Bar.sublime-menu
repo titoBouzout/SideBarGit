@@ -102,6 +102,8 @@
 					{ "caption": "switch to master", 	  									  "command": "side_bar_git_branch_switch_to_master", 												"args": {"paths": []} },
 					{ "caption": "switch to…", 	  												  "command": "side_bar_git_branch_switch_to", 												"args": {"paths": []} },
 					{ "caption": "-"},
+					{ "caption": "rebase current into master…", 	"command": "side_bar_git_rebase_current_into_master", 												"args": {"paths": []} },
+					{ "caption": "-"},
 					{ "caption": "merge changes to current from…", 	"command": "side_bar_git_merge_to_current_from", 												"args": {"paths": []} },
 					{ "caption": "-"},
 					{ "caption": "delete…", 	  												    "command": "side_bar_git_branch_delete", 												"args": {"paths": []} },
