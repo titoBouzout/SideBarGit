@@ -830,6 +830,20 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('Remote add: ', "git remote add aRemoteName "+sublime.get_clipboard(), self.run, paths)
+		elif content != '':
+			import sys
+			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+				object = Object()
+				object.item = item.repository
+				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				SideBarGit().run(object, True)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
  #  }
  #  this.remoteAdd = function(event)
  #  {
