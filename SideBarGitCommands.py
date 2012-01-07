@@ -1017,6 +1017,32 @@ class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
  
+class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'branch', '-v']
+			object.silent = True
+			SideBarGit().run(object)
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+
+	def on_done(self, extra, data, result):
+			result = data[result].strip()
+			if result.startswith("*"):
+				return
+			else:
+				import sys
+				branch = result.split(' ')[0]
+				object = Object()
+				object.item = extra
+				object.command = ['git', 'merge', branch.encode(sys.getfilesystemencoding())]
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
  #  }
  #  this.tagAdd = function(event)
  #  {

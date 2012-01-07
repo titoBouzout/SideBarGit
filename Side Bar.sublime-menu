@@ -102,8 +102,7 @@
 					{ "caption": "switch to master", 	  									  "command": "side_bar_git_branch_switch_to_master", 												"args": {"paths": []} },
 					{ "caption": "switch to…", 	  												  "command": "side_bar_git_branch_switch_to", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "merge changes from current into master", 	"command": "side_bar_git_merge_current_into_master", 												"args": {"paths": []} },
-					{ "caption": "merge changes from current into…", 	  		"command": "side_bar_git_merge_current_into", 												"args": {"paths": []} },
+					{ "caption": "merge changes to current from…", 	"command": "side_bar_git_merge_to_current_from", 												"args": {"paths": []} },
 					{ "caption": "-"},
 					{ "caption": "delete…", 	  												    "command": "side_bar_git_branch_delete", 												"args": {"paths": []} },
 					{ "caption": "delete even if unmerged (force deletion)…","command": "side_bar_git_branch_delete_force", 												"args": {"paths": []} }
