@@ -836,67 +836,187 @@ class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('Remote add: ', "git remote add aRemoteName "+sublime.get_clipboard(), self.run, paths)
 		elif content != '':
 			import sys
-			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			content = content.encode(sys.getfilesystemencoding())
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
-				object.item = item.repository
-				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
-				SideBarGit().run(object, True)
+				object.item = repo.repository
+				object.command = content.split(' ')
+				object.to_status_bar = True
+				SideBarGit().run(object)
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- #  }
- #  this.remoteAdd = function(event)
- #  {
-	# var aMsg = this.s.prompt('Enter name and URL of remote…');
-	# if(aMsg != '')
-	# {
-	#   var repos = this.getSelectedRepos(event);
-	#   var commands = '';
-	#   for(var id in repos.r)
-	#   {
-	# 	commands += 'cd '+repos.r[id].cwd+'';
-	# 	commands += '\n';
-	# 	commands += 'git remote add '+aMsg+' >>'+repos.obj.output+' 2>&1';
-	# 	commands += '\n';
-	#   }
-	#   this.s.fileWrite(repos.obj.sh, commands);
-	#   this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
-	# }
- #  }
- #  this.configDefaultRemote = function(event)
- #  {
-	# var aBranch = this.s.prompt('Enter the name of your local branch…');
-	# if(aBranch != '')
-	#   var aRemote = this.s.prompt('Enter the name of the remote…');
-	# if(aBranch != '' && aRemote != '')
-	# {
-	#   var repos = this.getSelectedRepos(event);
-	#   var commands = '';
-	#   for(var id in repos.r)
-	#   {
-	# 	commands += 'cd '+repos.r[id].cwd+'';
-	# 	commands += '\n';
-	# 	commands += 'git config branch.'+aBranch+'.remote '+aRemote+' >>'+repos.obj.output+' 2>&1';
-	# 	commands += '\n';
-	#   }
-	#   this.s.fileWrite(repos.obj.sh, commands);
-	#   this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
-	# }
- #  }
- #  this.command = function(event)
- #  {
-	# var selected = this.getSelectedPathFolder(event);
-	# var obj = this.getPaths(selected);
+ 
+class SideBarGitBranchNewFromCurrentCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('New branch: ', "", self.run, paths)
+		elif content != '':
+			import sys
+			content = content.encode(sys.getfilesystemencoding())
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', '-b', content]
+				object.to_status_bar = True
+				SideBarGit().run(object)
 
-	# var aMsg = this.s.prompt('[komodin@komodo '+obj.cwdSelected+'] $ ', 'git ');
-	# if(aMsg != '')
-	# {
-	#   this.s.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \n'+aMsg+' >>'+obj.output+' 2>&1');
-	#   this.loadingSet();
-	#   this.s.execute(this.gitPath, obj.sh, obj.outputFile, function(a,b){ kgit.executeObserver(a,b,true)});
-	# }
- #  }
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
+class SideBarGitBranchNewFromMasterCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('New branch: ', "", self.run, paths)
+		elif content != '':
+			import sys
+			content = content.encode(sys.getfilesystemencoding())
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', 'master']
+				SideBarGit().run(object)
+				
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', '-b', content]
+				object.to_status_bar = True
+				SideBarGit().run(object)
 
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitBranchNewFromCleanCurrentCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('New branch: ', "", self.run, paths)
+		elif content != '':
+			import sys
+			content = content.encode(sys.getfilesystemencoding())
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', '-B', content]
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitBranchNewFromCleanMasterCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('New branch: ', "", self.run, paths)
+		elif content != '':
+			import sys
+			content = content.encode(sys.getfilesystemencoding())
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+				
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', 'master']
+				SideBarGit().run(object)
+
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', '-B', content]
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
+class SideBarGitBranchSwitchToMasterCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+				object = Object()
+				object.item = repo.repository
+				object.command = ['git', 'checkout', 'master']
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
+class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'branch', '-v']
+			object.silent = True
+			SideBarGit().run(object)
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+
+	def on_done(self, extra, data, result):
+			result = data[result].strip()
+			if result.startswith("*"):
+				return
+			else:
+				import sys
+				branch = result.split(' ')[0]
+				object = Object()
+				object.item = extra
+				object.command = ['git', 'checkout', branch.encode(sys.getfilesystemencoding())]
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
+class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'branch', '-v']
+			object.silent = True
+			SideBarGit().run(object)
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+
+	def on_done(self, extra, data, result):
+			result = data[result].strip()
+			if result.startswith("*"):
+				return
+			else:
+				import sys
+				branch = result.split(' ')[0]
+				object = Object()
+				object.item = extra
+				object.command = ['git', 'branch', '-d', branch.encode(sys.getfilesystemencoding())]
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
+class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'branch', '-v']
+			object.silent = True
+			SideBarGit().run(object)
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+
+	def on_done(self, extra, data, result):
+			result = data[result].strip()
+			if result.startswith("*"):
+				return
+			else:
+				import sys
+				branch = result.split(' ')[0]
+				object = Object()
+				object.item = extra
+				object.command = ['git', 'branch', '-D', branch.encode(sys.getfilesystemencoding())]
+				object.to_status_bar = True
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+ 
  #  }
  #  this.tagAdd = function(event)
  #  {

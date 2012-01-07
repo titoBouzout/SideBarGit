@@ -89,6 +89,26 @@
 			},
 			{ "caption": "-"},
 
+			{ 
+				"caption": "Branch", 	  
+				"children":
+				[
+					{ "caption": "new from current and switch to…", 	  		"command": "side_bar_git_branch_new_from_current", 												"args": {"paths": []} },
+					{ "caption": "new from master and switch to…", 	  			"command": "side_bar_git_branch_new_from_master", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "new from cleaned current and switch to…", "command": "side_bar_git_branch_new_from_clean_current", 												"args": {"paths": []} },
+					{ "caption": "new from cleaned master and switch to…", 	"command": "side_bar_git_branch_new_from_clean_master", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "switch to master", 	  									  "command": "side_bar_git_branch_switch_to_master", 												"args": {"paths": []} },
+					{ "caption": "switch to…", 	  												  "command": "side_bar_git_branch_switch_to", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "merge changes from current into master", 	"command": "side_bar_git_merge_current_into_master", 												"args": {"paths": []} },
+					{ "caption": "merge changes from current into…", 	  		"command": "side_bar_git_merge_current_into", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "delete…", 	  												    "command": "side_bar_git_branch_delete", 												"args": {"paths": []} },
+					{ "caption": "delete even if unmerged (force deletion)…","command": "side_bar_git_branch_delete_force", 												"args": {"paths": []} }
+				]
+			},
 			{ "caption": "Checkout to…", 	  												"command": "side_bar_git_checkout_to", 												"args": {"paths": []} },
 			{ "caption": "Checkout repository to…", 	  												"command": "side_bar_git_checkout_repository_to", 												"args": {"paths": []} },
 			{ "caption": "-"},
@@ -109,8 +129,7 @@
 					{ "caption": "Fetch", 	  												"command": "side_bar_git_fetch", 												"args": {"paths": []} },
 					{ "caption": "Fetch with options…", 	  												"command": "side_bar_git_fetch_with_options", 												"args": {"paths": []} },
 					{ "caption": "-"},
-					{ "caption": "Remote add…", 	  												"command": "xxxx", 												"args": {"paths": []} },
-					{ "caption": "Configure default remote…", 	  												"command": "xxxx", 												"args": {"paths": []} }
+					{ "caption": "Remote add…", 	  												"command": "side_bar_git_remote_add", 												"args": {"paths": []} }
 				]
 			},
 

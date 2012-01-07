@@ -8,12 +8,14 @@ from Utils import Object
 
 class SideBarGit:
 
+	last_stdout = ''
+
 	def run(
 					self,
 					object,
 					modal = False,
 					background = False,
-
+					
 					refresh_funct_view = False,
 					refresh_funct_command = False,
 					refresh_funct_item = False,
@@ -87,6 +89,9 @@ class SideBarGit:
 				return True
 
 			stdout, stderr = process.communicate()
+			SideBarGit.last_stdout = str(stdout).rstrip()
+			self.last_stdout = str(stdout).rstrip()
+
 			stdout = stdout.strip()
 
 			if stdout.find('fatal:') == 0 or stdout.find('error:') == 0 or stdout.find('Permission denied') == 0 or stderr:
@@ -107,11 +112,15 @@ class SideBarGit:
 			failed = True
 			print errno
 			print strerror
+			SideBarGit.last_stdout = ''
+			self.last_stdout = ''
 		except IOError as (errno, strerror):
 			print 'FAILED'
 			failed = True
 			print errno
 			print strerror
+			SideBarGit.last_stdout = ''
+			self.last_stdout = ''
 		if debug:
 			print '----------------------------------------------------------'
 
@@ -119,6 +128,12 @@ class SideBarGit:
 			object.to_status_bar
 		except:
 			object.to_status_bar = False
+
+		try:
+			object.silent
+			return
+		except:
+			pass
 
 		if failed:
 			try:
@@ -254,6 +269,17 @@ class SideBarGit:
 			v.erase_status('SideBarGit')
 		except:#this view is not there
 			pass
+
+	def quickPanel(self, function, extra, data):
+		import functools
+		window = sublime.active_window()
+		window.show_input_panel("BUG!", '', '', None, None)
+		window.run_command('hide_panel');
+		window.show_quick_panel(data, functools.partial(self.quickPanelDone, function, extra, data), sublime.MONOSPACE_FONT)
+
+	def quickPanelDone(self, function, extra, data, result):
+		if result != -1:
+			function(extra, data, result)
 
 	def getSelectedRepos(self, items):
 		repos = []
