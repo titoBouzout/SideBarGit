@@ -8,12 +8,14 @@ import re
 import tempfile
 import codecs
 import os
+import time
 
 from SideBarGit import SideBarGit
 from SideBarItem import SideBarItem
 from Utils import Object
 
 Object.running = False
+Object.timing = time.time()
 
 class SideBarGitGutterDiff(sublime_plugin.EventListener):
 
@@ -21,7 +23,12 @@ class SideBarGitGutterDiff(sublime_plugin.EventListener):
 		self.run(view)
 
 	def on_modified(self, view):
-		self.run(view)
+		now = time.time()
+		if now - Object.timing > 0.1:
+			Object.timing = now
+			self.run(view)
+		else:
+			Object.timing = now
 
 	def on_post_save(self, view):
 		self.run(view)
