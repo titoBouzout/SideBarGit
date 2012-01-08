@@ -5,7 +5,7 @@ import re
 
 from SideBarSelection import SideBarSelection
 from SideBarGit import SideBarGit
-from Utils import Object
+from Utils import Object, uniqueList
 
 #run last command again on a focused tab when pressing F5
 
@@ -448,8 +448,12 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 					continue
 			ignore_entry = re.sub('^/+', '', original.replace(item.dirname(), '').replace('\\', '/'))
 			if originalIsDirectory:
-				ignore_entry += '/*'
-			item.write(item.contentUTF8().strip()+'\n'+ignore_entry)
+				ignore_entry = '/'+ignore_entry
+			content = item.contentUTF8().strip()+'\n'+ignore_entry
+			content = content.replace('\r\n', '\n')
+			content = "\n".join(uniqueList(content.split('\n')))
+
+			item.write(content.strip())
 			SideBarGit().status('Ignored file "'+ignore_entry+'" on '+item.path())
 
 	def is_enabled(self, paths = []):
