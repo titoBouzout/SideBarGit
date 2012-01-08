@@ -37,5 +37,5 @@ class StatusBarBranchGet(threading.Thread):
 			branches = branches.split('\n')
 			for branch in branches:
 				if branch.startswith("*"):
-					self.v.set_status('statusbar_sidebargit_branch', '*'+branch.split(' ')[1])
+					self.v.set_status('statusbar_sidebargit_branch', branch)
 					return
