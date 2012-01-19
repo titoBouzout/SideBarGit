@@ -219,7 +219,7 @@ class SideBarItem:
 
 		options = Object()
 
-		options.scroll = [view.rowcol(view.visible_region().begin()), view.rowcol(view.visible_region().end())]
+		options.scroll = view.viewport_position()
 
 		options.selections = []
 		for sel in view.sel():
@@ -237,9 +237,14 @@ class SideBarItem:
 			options.bookmarks.append([view.text_point(line_s, col_s), view.text_point(line_e, col_e)])
 
 		options.folds = []
-		for sel in view.unfold(sublime.Region(0, view.size())):
-			line_s, col_s = view.rowcol(sel.a); line_e, col_e = view.rowcol(sel.b)
-			options.folds.append([view.text_point(line_s, col_s), view.text_point(line_e, col_e)])
+		if sublime.version() >= 2167:
+			for sel in view.folded_regions():
+				line_s, col_s = view.rowcol(sel.a); line_e, col_e = view.rowcol(sel.b)
+				options.folds.append([view.text_point(line_s, col_s), view.text_point(line_e, col_e)])
+		else:
+			for sel in view.unfold(sublime.Region(0, view.size())):
+				line_s, col_s = view.rowcol(sel.a); line_e, col_e = view.rowcol(sel.b)
+				options.folds.append([view.text_point(line_s, col_s), view.text_point(line_e, col_e)])
 
 		window.focus_view(view)
 		if view.is_dirty():
@@ -261,7 +266,7 @@ class SideBarItem:
 
 	def _move_restoreView(self, view, options):
 		if view.is_loading():
-			sublime.set_timeout(lambda: self._moveViewRestore(view, options), 100)
+			sublime.set_timeout(lambda: self._move_restoreView(view, options), 100)
 		else:
 			if options.content != False:
 				edit = view.begin_edit()
@@ -289,7 +294,7 @@ class SideBarItem:
 			if len(rs):
 				view.add_regions("bookmarks", rs, "bookmarks", "bookmark", sublime.HIDDEN | sublime.PERSISTENT)
 
-			view.show(view.text_point(options.scroll[1][0], options.scroll[1][1]), False)
+			view.set_viewport_position(options.scroll, False)
 
 	def copy(self, location):
 		location = SideBarItem(location, os.path.isdir(location));
