@@ -226,7 +226,10 @@ class SideBarGit:
 				content += "\n"
 				content += "# Tip: F5 will run the command again and refresh the contents of this tab"
 				content += "\n\n"
-				content += stdout.decode('utf-8')
+				try:
+					content += stdout
+				except:
+					content += unicode(stdout, errors='ignore')
 
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
