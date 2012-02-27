@@ -566,6 +566,18 @@ class SideBarGitPushAndPushTagsCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitPushAllBranchesCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			object = Object()
+			object.item = item.repository
+			object.command = ['git','push','origin','*:*']
+			object.to_status_bar = True
+			SideBarGit().run(object, True)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
 class SideBarGitPushTagsCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -756,7 +768,7 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 				object.item = repo.repository
 				object.command = ['git','push']
 				SideBarGit().run(object, True)
-	
+
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
@@ -843,7 +855,7 @@ class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitBranchNewFromCurrentCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
@@ -860,7 +872,7 @@ class SideBarGitBranchNewFromCurrentCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitBranchNewFromMasterCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
@@ -873,7 +885,7 @@ class SideBarGitBranchNewFromMasterCommand(sublime_plugin.WindowCommand):
 				object.item = repo.repository
 				object.command = ['git', 'checkout', 'master']
 				SideBarGit().run(object)
-				
+
 				object = Object()
 				object.item = repo.repository
 				object.command = ['git', 'checkout', '-b', content]
@@ -909,7 +921,7 @@ class SideBarGitBranchNewFromCleanMasterCommand(sublime_plugin.WindowCommand):
 			import sys
 			content = content.encode(sys.getfilesystemencoding())
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-				
+
 				object = Object()
 				object.item = repo.repository
 				object.command = ['git', 'checkout', 'master']
@@ -923,7 +935,7 @@ class SideBarGitBranchNewFromCleanMasterCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitBranchSwitchToMasterCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -935,7 +947,7 @@ class SideBarGitBranchSwitchToMasterCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -961,7 +973,7 @@ class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -987,7 +999,7 @@ class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -1013,7 +1025,7 @@ class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -1039,7 +1051,7 @@ class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
 class SideBarGitRebaseCurrentIntoMasterCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
@@ -1050,7 +1062,7 @@ class SideBarGitRebaseCurrentIntoMasterCommand(sublime_plugin.WindowCommand):
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
- 
+
  #  }
  #  this.tagAdd = function(event)
  #  {
