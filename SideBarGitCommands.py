@@ -7,6 +7,12 @@ from SideBarSelection import SideBarSelection
 from SideBarGit import SideBarGit
 from Utils import Object, uniqueList
 
+try:
+	from BufferScroll import BufferScroll
+	BufferScroll = BufferScroll()
+except:
+	BufferScroll = False
+
 #run last command again on a focused tab when pressing F5
 
 class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCommand):
@@ -30,6 +36,12 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCom
 												view.settings().get('SideBarGitNoResults'),
 												view.settings().get('SideBarGitSyntaxFile')
 												)
+		else:
+			if BufferScroll:
+				BufferScroll.save(view, 'sidebar-git');
+			view.run_command("revert")
+			if BufferScroll:
+				BufferScroll.restore(view, 'sidebar-git');
 
 #Following code for selected files or folders
 
