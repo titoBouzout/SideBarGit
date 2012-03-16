@@ -3,14 +3,16 @@ import sublime_plugin, sublime
 import os
 import re
 
-from SideBarSelection import SideBarSelection
-from SideBarGit import SideBarGit
-from Utils import Object, uniqueList
+from sidebar.SideBarSelection import SideBarSelection
+from sidebar.SideBarGit import SideBarGit
 
 try:
 	from BufferScroll import BufferScrollAPI
 except:
 	BufferScrollAPI = False
+
+class Object():
+	pass
 
 #run last command again on a focused tab when pressing F5
 
@@ -472,7 +474,7 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 				ignore_entry = '/'+ignore_entry
 			content = item.contentUTF8().strip()+'\n'+ignore_entry
 			content = content.replace('\r\n', '\n')
-			content = "\n".join(uniqueList(content.split('\n')))
+			content = "\n".join(list(set(content.split('\n'))))
 
 			item.write(content.strip())
 			SideBarGit().status('Ignored file "'+ignore_entry+'" on '+item.path())

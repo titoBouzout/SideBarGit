@@ -1,8 +1,10 @@
 import sublime, sublime_plugin
-from SideBarGit import SideBarGit
-from SideBarSelection import SideBarSelection
-from Utils import Object
+from sidebar.SideBarGit import SideBarGit
+from sidebar.SideBarSelection import SideBarSelection
 import threading
+
+class Object():
+	pass
 
 s = sublime.load_settings('SideBarGit.sublime-settings')
 

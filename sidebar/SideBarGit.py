@@ -4,7 +4,9 @@ import os
 import subprocess
 
 from SideBarItem import SideBarItem
-from Utils import Object
+
+class Object():
+	pass
 
 class SideBarGit:
 
@@ -15,7 +17,7 @@ class SideBarGit:
 					object,
 					modal = False,
 					background = False,
-					
+
 					refresh_funct_view = False,
 					refresh_funct_command = False,
 					refresh_funct_item = False,
