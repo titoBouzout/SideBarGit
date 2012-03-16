@@ -22,7 +22,7 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCom
 		if not window:
 			return
 		view 	 =  window.active_view()
-		if not view:
+		if view is None:
 			return
 		if view.settings().has('SideBarGitIsASideBarGitTab'):
 			SideBarGit().run(
