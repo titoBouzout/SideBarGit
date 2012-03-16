@@ -23,6 +23,7 @@
 				"children":
 				[
 					{ "caption": "all changes since the last commit", 	  												"command": "side_bar_git_diff_all_changes_since_last_commit", 												"args": {"paths": []} },
+					{ "caption": "all changes since the last commit ( ignore whitespace )", 	  	"command": "side_bar_git_diff_all_changes_since_last_commit_ignore_white_space", 												"args": {"paths": []} },
 					{ "caption": "-"},
 					{ "caption": "changes that have not been staged", 	  												"command": "side_bar_git_diff_changes_not_staged", 												"args": {"paths": []} },
 					{ "caption": "changes that are staged but not committed", 	  												"command": "side_bar_git_diff_changes_staged_not_commited", 												"args": {"paths": []} },

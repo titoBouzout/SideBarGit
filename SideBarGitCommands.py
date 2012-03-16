@@ -8,10 +8,9 @@ from SideBarGit import SideBarGit
 from Utils import Object, uniqueList
 
 try:
-	from BufferScroll import BufferScroll
-	BufferScroll = BufferScroll()
+	from BufferScroll import BufferScrollAPI
 except:
-	BufferScroll = False
+	BufferScrollAPI = False
 
 #run last command again on a focused tab when pressing F5
 
@@ -37,11 +36,11 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCom
 												view.settings().get('SideBarGitSyntaxFile')
 												)
 		else:
-			if BufferScroll:
-				BufferScroll.save(view, 'sidebar-git');
+			if BufferScrollAPI:
+				BufferScrollAPI.save(view, 'sidebar-git');
 			view.run_command("revert")
-			if BufferScroll:
-				BufferScroll.restore(view, 'sidebar-git');
+			if BufferScrollAPI:
+				BufferScrollAPI.restore(view, 'sidebar-git');
 
 #Following code for selected files or folders
 
@@ -51,6 +50,20 @@ class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowComman
 			object = Object()
 			object.item = item
 			object.command = ['git', 'diff', 'HEAD', '--no-color', '--', item.forCwdSystemName()]
+			object.title = 'Diff: '+item.name()+'.diff'
+			object.no_results = 'No differences to show'
+			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.word_wrap = False
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitDiffAllChangesSinceLastCommitIgnoreWhiteSpaceCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'diff', 'HEAD', '--no-color', '-w', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
 			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
