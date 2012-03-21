@@ -37,12 +37,22 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCom
 												view.settings().get('SideBarGitNoResults'),
 												view.settings().get('SideBarGitSyntaxFile')
 												)
-		else:
+		elif view.file_name():
 			if BufferScrollAPI:
 				BufferScrollAPI.save(view, 'sidebar-git');
 			view.run_command("revert")
 			if BufferScrollAPI:
 				BufferScrollAPI.restore(view, 'sidebar-git');
+
+	def is_enabled(self):
+		window = sublime.active_window()
+		if not window:
+			return False
+		view 	 =  window.active_view()
+		if view is None:
+			return False
+		if view.settings().has('SideBarGitIsASideBarGitTab') or view.file_name():
+			return True
 
 #Following code for selected files or folders
 
