@@ -33,6 +33,13 @@ class SideBarItem:
 			path = path.replace(directory, '', 1)
 		return path.replace('\\', '/')
 
+	def isUnderCurrentProject(self):
+		path = self.path()
+		path2 = self.path()
+		for directory in SideBarProject().getDirectories():
+			path2 = path2.replace(directory, '', 1)
+		return path != path2
+
 	def pathRelativeFromProject(self):
 		return re.sub('^/+', '', self.pathWithoutProject())
 
@@ -311,9 +318,12 @@ class SideBarItem:
 			view.window().run_command('revert')
 		else:
 			options.content = False
+
+		_view = view
+		view = window.open_file(location)
+		window.focus_view(_view)
 		window.run_command('close')
 
-		view = window.open_file(location)
 		sublime.set_timeout(lambda: self._move_restoreView(view, options, window), 200)
 
 		if is_active_view:
