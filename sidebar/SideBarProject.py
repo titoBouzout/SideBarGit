@@ -17,30 +17,44 @@ class SideBarProject:
 				return directory
 
 	def getProjectFile(self):
+		if not self.getDirectories():
+			return None
 		import json
 		data = file(os.path.normpath(os.path.join(sublime.packages_path(), '..', 'Settings', 'Session.sublime_session')), 'r').read()
 		data = data.replace('\t', ' ')
 		data = json.loads(data)
 		projects = data['workspaces']['recent_workspaces']
+
+		if os.path.lexists(os.path.join(sublime.packages_path(), '..', 'Settings', 'Auto Save Session.sublime_session')):
+			data = file(os.path.normpath(os.path.join(sublime.packages_path(), '..', 'Settings', 'Auto Save Session.sublime_session')), 'r').read()
+			data = data.replace('\t', ' ')
+			data = json.loads(data)
+			if 'workspaces' in data and 'recent_workspaces' in data['workspaces'] and data['workspaces']['recent_workspaces']:
+				projects += data['workspaces']['recent_workspaces']
+			projects = list(set(projects))
 		for project_file in projects:
 			project_file = re.sub(r'^/([^/])/', '\\1:/', project_file);
-			folders = json.loads(file(project_file, 'r').read())['folders']
-			found_all = True
-			for directory in self.getDirectories():
-				found = False
-				for folder in folders:
-					folder_path = re.sub(r'^/([^/])/', '\\1:/', folder['path']);
-					if folder_path == directory.replace('\\', '/'):
-						found = True
+			project_json = json.loads(file(project_file, 'r').read())
+			if 'folders' in project_json:
+				folders = project_json['folders']
+				found_all = True
+				for directory in self.getDirectories():
+					found = False
+					for folder in folders:
+						folder_path = re.sub(r'^/([^/])/', '\\1:/', folder['path']);
+						if folder_path == directory.replace('\\', '/'):
+							found = True
+							break;
+					if found == False:
+						found_all = False
 						break;
-				if found == False:
-					found_all = False
-					break;
 			if found_all:
 				return project_file
 		return None
 
 	def getProjectJson(self):
+		if not self.hasOpenedProject():
+			return None
 		import json
 		data = file(self.getProjectFile(), 'r').read().replace('\t', ' ')
 		return json.loads(data)
@@ -96,6 +110,8 @@ class SideBarProject:
 			pass
 
 	def getPreference(self, name):
+		if not self.hasOpenedProject():
+			return None
 		project = self.getProjectJson()
 		try:
 			return project[name]
