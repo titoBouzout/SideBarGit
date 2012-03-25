@@ -54,6 +54,20 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCom
 		if view.settings().has('SideBarGitIsASideBarGitTab') or view.file_name():
 			return True
 
+
+def closed_affected_items(items):
+	closed_items = []
+	for item in items:
+		if not item.isDirectory():
+			closed_items += item.close_associated_buffers()
+	return closed_items
+
+def reopen_affected_items(closed_items):
+	for item in closed_items:
+		file_name, window, view_index = item
+		if window and os.path.exists(file_name):
+			view = window.open_file(file_name)
+			window.set_view_index(view, view_index[0], view_index[1])
 #Following code for selected files or folders
 
 class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowCommand):
@@ -309,6 +323,7 @@ class SideBarGitRevertTrackedCommand(sublime_plugin.WindowCommand):
 		if confirm == False:
 			SideBarGit().confirm('Discard changes to tracked on selected items? ', self.run, paths)
 		else:
+			closed_items = closed_affected_items(SideBarSelection(paths).getSelectedItems())
 			for item in SideBarSelection(paths).getSelectedItems():
 				object = Object()
 				object.item = item
@@ -317,6 +332,8 @@ class SideBarGitRevertTrackedCommand(sublime_plugin.WindowCommand):
 					failed = True
 			if not failed:
 				SideBarGit().status('Discarded changes to tracked on selected items')
+			reopen_affected_items(closed_items)
+
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
