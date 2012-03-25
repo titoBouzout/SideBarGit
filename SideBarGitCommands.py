@@ -2,7 +2,6 @@
 import sublime_plugin, sublime
 import os
 import re
-import time
 
 from sidebar.SideBarSelection import SideBarSelection
 from sidebar.SideBarGit import SideBarGit
@@ -61,7 +60,6 @@ def closed_affected_items(items):
 	for item in items:
 		if not item.isDirectory():
 			closed_items += item.close_associated_buffers()
-	time.sleep(1)
 	return closed_items
 
 def reopen_affected_items(closed_items):
@@ -325,8 +323,9 @@ class SideBarGitRevertTrackedCommand(sublime_plugin.WindowCommand):
 		if confirm == False:
 			SideBarGit().confirm('Discard changes to tracked on selected items? ', self.run, paths)
 		else:
-			closed_items = closed_affected_items(SideBarSelection(paths).getSelectedItems())
-			for item in SideBarSelection(paths).getSelectedItems():
+			items = SideBarSelection(paths).getSelectedItems()
+			closed_items = closed_affected_items(items)
+			for item in items:
 				object = Object()
 				object.item = item
 				object.command = ['git', 'checkout', 'HEAD', '--', item.forCwdSystemName()]
