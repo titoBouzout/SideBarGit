@@ -729,6 +729,7 @@ class SideBarGitCommitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
+			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
 			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
@@ -749,6 +750,7 @@ class SideBarGitCommitAllCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
+			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
 			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
@@ -781,6 +783,7 @@ class SideBarGitAddCommitCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
+			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
 			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
@@ -807,6 +810,7 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
+			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
 			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
