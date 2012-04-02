@@ -80,7 +80,7 @@ class SideBarItem:
 
 	def forCwdSystemName(self):
 		if self.isDirectory():
-			return './'
+			return '.'
 		else:
 			path = self.pathSystem()
 			branch = self.dirnameSystem()
