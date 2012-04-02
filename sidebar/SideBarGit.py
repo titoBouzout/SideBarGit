@@ -56,33 +56,27 @@ class SideBarGit:
 
 		cwd = object.item.forCwdSystemPath()
 
+		is_win32 = sys.platform == 'win32'
+		print is_win32
+
 		try:
-			if not modal :
+			if sys.platform == 'win32':
+				process = subprocess.Popen(
+																	#" ".join(object.command),
+																	object.command,
+																	cwd=cwd,
+																	stdout=subprocess.PIPE,
+																	stderr=subprocess.STDOUT,
+																	shell=True,
+																	universal_newlines=True)
+			else:
 				process = subprocess.Popen(
 																	object.command,
 																	cwd=cwd,
 																	stdout=subprocess.PIPE,
 																	stderr=subprocess.STDOUT,
-																	shell= sys.platform == 'win32',
+																	shell=False,
 																	universal_newlines=True)
-			else:
-				if sys.platform == 'win32':
-					process = subprocess.Popen(
-																		#" ".join(object.command),
-																		object.command,
-																		cwd=cwd,
-																		stdout=subprocess.PIPE,
-																		stderr=subprocess.STDOUT,
-																		shell=True,
-																		universal_newlines=True)
-				else:
-					process = subprocess.Popen(
-																		object.command,
-																		cwd=cwd,
-																		stdout=subprocess.PIPE,
-																		stderr=subprocess.STDOUT,
-																		shell=False,
-																		universal_newlines=True)
 
 			if background:
 				if debug:
