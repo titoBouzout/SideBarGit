@@ -56,9 +56,6 @@ class SideBarGit:
 
 		cwd = object.item.forCwdSystemPath()
 
-		is_win32 = sys.platform == 'win32'
-		print is_win32
-
 		try:
 			if sys.platform == 'win32':
 				process = subprocess.Popen(
