@@ -388,21 +388,24 @@ class SideBarItem:
 			views.reverse();
 			for view in views:
 				if path == view.file_name():
-					closed_items.append([view.file_name(), view.window(), view.window().get_view_index(view)])
+					if view.window():
+						closed_items.append([view.file_name(), view.window(), view.window().get_view_index(view)])
 					if len(window.views()) == 1:
 						window.new_file()
 					window.focus_view(view)
 					window.run_command('revert')
 					window.run_command('close')
 				elif view.file_name().find(path+'\\') == 0:
-					closed_items.append([view.file_name(), view.window(), view.window().get_view_index(view)])
+					if view.window():
+						closed_items.append([view.file_name(), view.window(), view.window().get_view_index(view)])
 					if len(window.views()) == 1:
 						window.new_file()
 					window.focus_view(view)
 					window.run_command('revert')
 					window.run_command('close')
 				elif view.file_name().find(path+'/') == 0:
-					closed_items.append([view.file_name(), view.window(), view.window().get_view_index(view)])
+					if view.window():
+						closed_items.append([view.file_name(), view.window(), view.window().get_view_index(view)])
 					if len(window.views()) == 1:
 						window.new_file()
 					window.focus_view(view)
