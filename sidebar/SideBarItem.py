@@ -91,7 +91,7 @@ class SideBarItem:
 		relative = SideBarItem(relativeFrom, os.path.isdir(relativeFrom))
 		path = self.pathSystem().replace(relative.pathSystem(), '', 1).replace('\\', '/')
 		if path == '':
-			return './'
+			return '.'
 		else:
 			return './'+re.sub('^/+', '', path)
 
@@ -99,7 +99,7 @@ class SideBarItem:
 		relative = SideBarItem(relativeFrom, os.path.isdir(relativeFrom))
 		path = self.pathSystem().replace(relative.pathSystem(), '', 1).replace('\\', '/')
 		if path == '':
-			return './'
+			return '.'
 		else:
 			if self.isDirectory():
 				return './'+re.sub('^/+', '', path)+'/'
