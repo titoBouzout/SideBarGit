@@ -38,7 +38,7 @@ class SideBarGit:
 			object.no_results = refresh_funct_no_results
 			object.syntax_file = refresh_funct_syntax_file
 
-		debug = False
+		debug = True
 		if debug:
 			print '----------------------------------------------------------'
 			print 'GIT:'
@@ -58,6 +58,7 @@ class SideBarGit:
 
 		try:
 			if sys.platform == 'win32':
+
 				process = subprocess.Popen(
 																	#" ".join(object.command),
 																	object.command,
@@ -273,8 +274,8 @@ class SideBarGit:
 	def quickPanel(self, function, extra, data):
 		import functools
 		window = sublime.active_window()
-		window.show_input_panel("BUG!", '', '', None, None)
-		window.run_command('hide_panel');
+		# window.show_input_panel("BUG!", '', '', None, None)
+		# window.run_command('hide_panel');
 		window.show_quick_panel(data, functools.partial(self.quickPanelDone, function, extra, data))
 
 	def quickPanelDone(self, function, extra, data, result):
