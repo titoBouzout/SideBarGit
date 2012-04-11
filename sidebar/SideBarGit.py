@@ -222,7 +222,7 @@ class SideBarGit:
 				try:
 					content += stdout
 				except:
-					content += unicode(stdout, errors='ignore')
+					content += unicode(stdout, 'UTF-8', errors='ignore')
 
 				edit = view.begin_edit()
 				view.replace(edit, sublime.Region(0, view.size()), content);
