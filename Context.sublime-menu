@@ -35,6 +35,22 @@
 					{ "caption": "between the two latest tags", 	  												"command": "xxxx", 												"args": {"paths": []} }
 				]
 			},
+			{
+				"caption": "Difftool", "id":"side-bar-git-difftool",
+				"children":
+				[
+					{ "caption": "all changes since the last commit", 	  												"command": "side_bar_git_difftool_all_changes_since_last_commit", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "changes that have not been staged", 	  												"command": "side_bar_git_difftool_changes_not_staged", 												"args": {"paths": []} },
+					{ "caption": "changes that are staged but not committed", 	  												"command": "side_bar_git_difftool_changes_staged_not_commited", 												"args": {"paths": []} },
+					{ "caption": "between the index and last commit", 	  												"command": "side_bar_git_difftool_between_index_and_last_commit", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "between remote and last local commit (origin/master..)", 	  												"command": "side_bar_git_difftool_between_remote_and_last_local_commit", 												"args": {"paths": []} },
+					{ "caption": "between last local commit and remote (..origin/master)", 	  												"command": "side_bar_git_difftool_between_last_local_commit_and_remote", 												"args": {"paths": []} },
+					{ "caption": "-"},
+					{ "caption": "between the two latest tags", 	  												"command": "xxxx", 												"args": {"paths": []} }
+				]
+			},
 			{ "caption": "-"},
 			{
 				"caption": "Log", "id":"side-bar-git-log",

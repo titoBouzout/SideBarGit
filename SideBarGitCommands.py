@@ -168,6 +168,66 @@ class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.Window
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitDifftoolAllChangesSinceLastCommitCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'difftool', 'HEAD', '--', item.forCwdSystemName()]
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitDifftoolChangesNotStagedCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'difftool', '--', item.forCwdSystemName()]
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitDifftoolChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'difftool', '--staged', '--', item.forCwdSystemName()]
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitDifftoolBetweenIndexAndLastCommitCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'difftool', '--cached', '--', item.forCwdSystemName()]
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitDifftoolBetweenRemoteAndLastLocalCommitCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'difftool', 'origin/master..', '--', item.forCwdSystemName()]
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitDifftoolBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
+			object.command = ['git', 'difftool', '..origin/master', '--', item.forCwdSystemName()]
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
 class SideBarGitLogStatShortLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		for item in SideBarSelection(paths).getSelectedItems():
