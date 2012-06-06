@@ -276,6 +276,7 @@ class SideBarGit:
 		window = sublime.active_window()
 		# window.show_input_panel("BUG!", '', '', None, None)
 		# window.run_command('hide_panel');
+		data = [item[:70] for item in data]
 		window.show_quick_panel(data, functools.partial(self.quickPanelDone, function, extra, data))
 
 	def quickPanelDone(self, function, extra, data, result):
