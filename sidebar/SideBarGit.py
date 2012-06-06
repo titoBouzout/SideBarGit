@@ -38,7 +38,7 @@ class SideBarGit:
 			object.no_results = refresh_funct_no_results
 			object.syntax_file = refresh_funct_syntax_file
 
-		debug = True
+		debug = False
 		if debug:
 			print '----------------------------------------------------------'
 			print 'GIT:'
