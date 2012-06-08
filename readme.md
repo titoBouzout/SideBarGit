@@ -10,13 +10,13 @@ This plugin is a port of the "Komodin" extension for komodo edit. See: https://g
 
 Usage
 ------------------
- 
+
 * Right click on "multiple/single" "files/folders" of the "tree" sidebar to apply commands on selected files which maybe are from different repositories.
 
-* To apply commands to focused document use the tab context menu.
+* To apply commands to focused document use the document context menu.
 
 * Tip: If a command sends output to a tab ( example a diff ), pressing F5 on that tab: will execute the command again and refresh the tab with the new contents ( example the new computed diff )
- 
+
 Provides the following commands
 ------------------
 
@@ -26,7 +26,7 @@ Add & Commit
   o git commit -m "promptMessage" -- "/selected/paths/files/or/and/folders"
 Add & Commit & Push
   o git add -- "/selected/paths/files/or/and/folders"
-  o git commit -m "promptMessage" -- "/selected/paths/files/or/and/folders" 
+  o git commit -m "promptMessage" -- "/selected/paths/files/or/and/folders"
   o git push
 
 Commit
@@ -43,7 +43,7 @@ Status
   o git status --untracked-files=all -- "/selected/paths/files/or/and/folders"
 
 Diff
-  
+
 	all changes since the last commit
 	  o git diff HEAD -- "/selected/paths/files/or/and/folders"
 	changes that have not been staged
@@ -51,9 +51,9 @@ Diff
 	changes that are staged but not committed
 	  o git diff --staged -- "/selected/paths/files/or/and/folders"
 	between the index and last commit
-	  o git diff --cached -- "/selected/paths/files/or/and/folders"	
+	  o git diff --cached -- "/selected/paths/files/or/and/folders"
 	between remote and last local commit (origin/master..)
-	  o git diff origin/master.. -- "/selected/paths/files/or/and/folders"	
+	  o git diff origin/master.. -- "/selected/paths/files/or/and/folders"
 	between last local commit and remote (..origin/master)
 	  o git diff ..origin/master -- "/selected/paths/files/or/and/folders"
 	between the two latest tags
@@ -61,7 +61,7 @@ Diff
 
 Log stat last 30
   o git log -n 30 --stat --graph -- "/selected/paths/files/or/and/folders"
-  
+
 	Log stat full
 	  o git log --stat --graph -- "/selected/paths/files/or/and/folders"
 	Log extended last 30
@@ -80,7 +80,7 @@ Blame
 
 Auto-Tag
   o git tag "YYMMDD.Version"
-  
+
 	Tag Add
 	  o git tag "promptMessage"
 	Tag Remove
@@ -90,7 +90,7 @@ Auto-Tag
 
 Revert Discard changes to tracked
   o git checkout HEAD -- "/selected/paths/files/or/and/folders"
-  
+
 	Revert Discard changes to tracked, clean untracked
 	  o git checkout HEAD -- "/selected/paths/files/or/and/folders"
 	  o git clean -f -d -- "/selected/paths/files/or/and/folders"
@@ -113,24 +113,24 @@ Checkout repo to
 
 Push
   o git push
-  
+
 	Push, Push Tags
-	  o git push && git push --tags 
+	  o git push && git push --tags
 	Push Tags
-	  o git push --tags 
+	  o git push --tags
 	Push with options…
 	  o promptMessage
-	
+
 	Pull
 	  o git pull
 	Pull with options…
 	  o promptMessage
-	
+
 	Fetch
 	  o git fetch
 	Fetch with options…
-	  o promptMessage 
-	
+	  o promptMessage
+
 	Remote add
 	  o git remote add promptMessage
 	Configure default remote
@@ -155,7 +155,7 @@ Git GUI
 Gitk
 Liberal Git Command
 </pre>
- 
+
 Installation
 ------------------
 
