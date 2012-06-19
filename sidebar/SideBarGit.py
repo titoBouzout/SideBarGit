@@ -50,14 +50,16 @@ class SideBarGit:
 
 		failed = False
 
-		import sys
-		if sys.platform == 'win32':
+		if sublime.platform() == 'windows':
 			object.command = map(self.escapeCMDWindows, object.command)
+
+		if sublime.platform() is not 'windows' and object.command[0] == 'git' and os.path.exists('/usr/local/git/bin'):
+			object.command[0] = '/usr/local/git/bin'
 
 		cwd = object.item.forCwdSystemPath()
 
 		try:
-			if sys.platform == 'win32':
+			if sublime.platform() == 'windows':
 
 				process = subprocess.Popen(
 																	#" ".join(object.command),
