@@ -53,8 +53,8 @@ class SideBarGit:
 		if sublime.platform() == 'windows':
 			object.command = map(self.escapeCMDWindows, object.command)
 
-		# if sublime.platform() is not 'windows' and object.command[0] == 'git' and os.path.exists('/usr/local/git/bin'):
-		# 	object.command[0] = '/usr/local/git/bin'
+		if sublime.platform() is not 'windows' and object.command[0] == 'git' and os.path.exists('/usr/local/git/bin'):
+			object.command[0] = '/usr/local/git/bin/git'
 
 		cwd = object.item.forCwdSystemPath()
 
