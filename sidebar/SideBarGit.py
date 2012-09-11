@@ -8,6 +8,8 @@ from SideBarItem import SideBarItem
 class Object():
 	pass
 
+s = sublime.load_settings('SideBarGit.sublime-settings')
+
 class SideBarGit:
 
 	last_stdout = ''
@@ -53,8 +55,11 @@ class SideBarGit:
 		if sublime.platform() == 'windows':
 			object.command = map(self.escapeCMDWindows, object.command)
 
-		if sublime.platform() is not 'windows' and object.command[0] == 'git' and os.path.exists('/usr/local/git/bin'):
-			object.command[0] = '/usr/local/git/bin/git'
+		if sublime.platform() is not 'windows' and object.command[0] == 'git':
+			if s.get('path_to_git_unixes') != '':
+				object.command[0] = s.get('path_to_git_unixes')
+			elif os.path.exists('/usr/local/git/bin'):
+				object.command[0] = '/usr/local/git/bin/git'
 
 		cwd = object.item.forCwdSystemPath()
 
