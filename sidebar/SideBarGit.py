@@ -9,6 +9,7 @@ class Object():
 	pass
 
 s = sublime.load_settings('SideBarGit.sublime-settings')
+path_to_git_unixes = s.get('path_to_git_unixes');
 
 class SideBarGit:
 
@@ -56,7 +57,7 @@ class SideBarGit:
 			object.command = map(self.escapeCMDWindows, object.command)
 
 		if sublime.platform() is not 'windows' and object.command[0] == 'git':
-			if s.get('path_to_git_unixes') != '':
+			if path_to_git_unixes != '':
 				object.command[0] = s.get('path_to_git_unixes')
 			elif os.path.exists('/usr/local/git/bin'):
 				object.command[0] = '/usr/local/git/bin/git'
