@@ -3,8 +3,9 @@ import sublime_plugin, sublime
 import os
 import re
 
-from sidebar.SideBarSelection import SideBarSelection
-from sidebar.SideBarGit import SideBarGit
+
+from .sidebar.SideBarSelection import SideBarSelection
+from .sidebar.SideBarGit import SideBarGit
 
 try:
 	from BufferScroll import BufferScrollAPI
@@ -13,6 +14,14 @@ except:
 
 class Object():
 	pass
+
+class WriteToViewCommand(sublime_plugin.TextCommand):
+	def run(self, edit, content):
+		view = self.view
+		view.replace(edit, sublime.Region(0, view.size()), content);
+		view.sel().clear()
+		view.sel().add(sublime.Region(0))
+		view.end_edit(edit)
 
 #run last command again on a focused tab when pressing F5
 
@@ -282,7 +291,7 @@ class SideBarGitLogStatListLatestCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = Object()
 			object.item = item
-			object.command = ['git', 'log', '-n', '50', '--pretty=format:%s'.encode(sys.getfilesystemencoding()),  '--no-color', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '-n', '50', '--pretty=format:%s',  '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
@@ -295,7 +304,7 @@ class SideBarGitLogStatListCommitLatestCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = Object()
 			object.item = item
-			object.command = ['git', 'log', '-n', '50', '--pretty=format:%h %s'.encode(sys.getfilesystemencoding()), '--no-color', '--', item.forCwdSystemName()]
+			object.command = ['git', 'log', '-n', '50', '--pretty=format:%h %s', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
 			SideBarGit().run(object)
@@ -505,7 +514,7 @@ class SideBarGitCheckoutToCommand(sublime_plugin.WindowCommand):
 			for item in SideBarSelection(paths).getSelectedItems():
 				object = Object()
 				object.item = item
-				object.command = ['git', 'checkout', content.encode(sys.getfilesystemencoding()), '--', item.forCwdSystemName()]
+				object.command = ['git', 'checkout', content, '--', item.forCwdSystemName()]
 				if not SideBarGit().run(object):
 					failed = True
 			if not failed:
@@ -555,7 +564,7 @@ class SideBarGitIgnoreAddCommand(sublime_plugin.WindowCommand):
 					item.path(item.join('.gitignore'))
 					item.create()
 				else:
-					SideBarGit().status('Unable to found repository for "'+original.encode('utf-8')+'"')
+					SideBarGit().status('Unable to found repository for "'+original+'"')
 					continue
 			ignore_entry = re.sub('^/+', '', original.replace(item.dirname(), '').replace('\\', '/'))
 			if originalIsDirectory:
@@ -594,7 +603,7 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 				object = Object()
 				object.item = item
-				object.command = ['git', 'clone', '--recursive', content.encode(sys.getfilesystemencoding())]
+				object.command = ['git', 'clone', '--recursive', content]
 				object.to_status_bar = True
 				if not SideBarGit().run(object, True):
 					failed = True
@@ -638,7 +647,7 @@ class SideBarGitCheckoutRepositoryToCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = ['git', 'checkout', content.encode(sys.getfilesystemencoding())]
+				object.command = ['git', 'checkout', content]
 				if not SideBarGit().run(object):
 					failed = True
 			if not failed:
@@ -668,7 +677,7 @@ class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				object.command = content.split(' ')
 				object.to_status_bar = True
 				SideBarGit().run(object, True)
 
@@ -734,7 +743,7 @@ class SideBarGitPullWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				object.command = content.split(' ')
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -763,7 +772,7 @@ class SideBarGitFetchWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				object.command = content.split(' ')
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -792,7 +801,7 @@ class SideBarGitCommitCommand(sublime_plugin.WindowCommand):
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
-			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
+			content = (content[0].upper() + content[1:])
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				commitCommand = ['git', 'commit', '-m', content, '--']
 				for item in repo.items:
@@ -813,7 +822,7 @@ class SideBarGitCommitAllCommand(sublime_plugin.WindowCommand):
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
-			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
+			content = (content[0].upper() + content[1:])
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
@@ -846,7 +855,7 @@ class SideBarGitAddCommitCommand(sublime_plugin.WindowCommand):
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
-			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
+			content = (content[0].upper() + content[1:])
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				commitCommandAdd = ['git', 'add', '--']
 				commitCommandCommit = ['git', 'commit', '-m', content, '--']
@@ -873,7 +882,7 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
 			import sys
-			content = (content[0].upper() + content[1:]).encode(sys.getfilesystemencoding())
+			content = (content[0].upper() + content[1:])
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				commitCommandAdd = ['git', 'add', '--']
 				commitCommandCommit = ['git', 'commit', '-m', content, '--']
@@ -955,7 +964,7 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 				object = Object()
 				object.item = item
-				object.command = content.encode(sys.getfilesystemencoding()).split(' ')
+				object.command = content.split(' ')
 				object.title = content
 				object.no_results = 'No output'
 				object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -970,7 +979,7 @@ class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('Remote add: ', "git remote add aRemoteName "+sublime.get_clipboard(), self.run, paths)
 		elif content != '':
 			import sys
-			content = content.encode(sys.getfilesystemencoding())
+			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = repo.repository
@@ -987,7 +996,7 @@ class SideBarGitBranchNewFromCurrentCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
 			import sys
-			content = content.encode(sys.getfilesystemencoding())
+			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = repo.repository
@@ -1004,7 +1013,7 @@ class SideBarGitBranchNewFromMasterCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
 			import sys
-			content = content.encode(sys.getfilesystemencoding())
+			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = repo.repository
@@ -1026,7 +1035,7 @@ class SideBarGitBranchNewFromCleanCurrentCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
 			import sys
-			content = content.encode(sys.getfilesystemencoding())
+			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 
 				object = Object()
@@ -1044,7 +1053,7 @@ class SideBarGitBranchNewFromCleanMasterCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
 			import sys
-			content = content.encode(sys.getfilesystemencoding())
+			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 
 				object = Object()
@@ -1081,7 +1090,7 @@ class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
 			SideBarGit().run(object)
-			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
 			result = data[result].strip()
@@ -1092,7 +1101,7 @@ class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
-				object.command = ['git', 'checkout', branch.encode(sys.getfilesystemencoding())]
+				object.command = ['git', 'checkout', branch]
 				object.to_status_bar = True
 				SideBarGit().run(object)
 
@@ -1107,7 +1116,7 @@ class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
 			SideBarGit().run(object)
-			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
 			result = data[result].strip()
@@ -1118,7 +1127,7 @@ class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
-				object.command = ['git', 'branch', '-d', branch.encode(sys.getfilesystemencoding())]
+				object.command = ['git', 'branch', '-d', branch]
 				object.to_status_bar = True
 				SideBarGit().run(object)
 
@@ -1133,7 +1142,7 @@ class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
 			SideBarGit().run(object)
-			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
 			result = data[result].strip()
@@ -1144,7 +1153,7 @@ class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
-				object.command = ['git', 'branch', '-D', branch.encode(sys.getfilesystemencoding())]
+				object.command = ['git', 'branch', '-D', branch]
 				object.to_status_bar = True
 				SideBarGit().run(object)
 
@@ -1159,7 +1168,7 @@ class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
 			SideBarGit().run(object)
-			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout.decode('utf-8')).split('\n'))
+			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
 			result = data[result].strip()
@@ -1170,7 +1179,7 @@ class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
-				object.command = ['git', 'merge', branch.encode(sys.getfilesystemencoding())]
+				object.command = ['git', 'merge', branch]
 				object.to_status_bar = True
 				SideBarGit().run(object)
 

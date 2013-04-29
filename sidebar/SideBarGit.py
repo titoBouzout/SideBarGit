@@ -3,13 +3,22 @@ import sublime
 import os
 import subprocess
 
-from SideBarItem import SideBarItem
+from .SideBarItem import SideBarItem
 
 class Object():
 	pass
 
-s = sublime.load_settings('SideBarGit.sublime-settings')
-path_to_git_unixes = s.get('path_to_git_unixes');
+class Content():
+	pass
+
+def plugin_loaded():
+	global s, path_to_git_unixes
+	s = sublime.load_settings('SideBarGit.sublime-settings')
+	path_to_git_unixes = s.get('path_to_git_unixes');
+
+
+def write_to_view(view, content):
+	view.run_command('write_to_view', {"content": content});
 
 class SideBarGit:
 
@@ -43,18 +52,18 @@ class SideBarGit:
 
 		debug = False
 		if debug:
-			print '----------------------------------------------------------'
-			print 'GIT:'
-			print object.command
-			print 'CWD:'
-			print object.item.forCwdSystemPath()
-			print 'PATH:'
-			print object.item.forCwdSystemName()
+			print ('----------------------------------------------------------')
+			print ('GIT:')
+			print (object.command)
+			print ('CWD:')
+			print (object.item.forCwdSystemPath())
+			print ('PATH:')
+			print (object.item.forCwdSystemName())
 
 		failed = False
 
 		if sublime.platform() == 'windows':
-			object.command = map(self.escapeCMDWindows, object.command)
+			object.command = list(map(self.escapeCMDWindows, object.command))
 
 		if sublime.platform() is not 'windows' and object.command[0] == 'git':
 			if path_to_git_unixes != '':
@@ -86,8 +95,8 @@ class SideBarGit:
 
 			if background:
 				if debug:
-					print 'SUCCESS'
-					print '----------------------------------------------------------'
+					print ('SUCCESS')
+					print ('----------------------------------------------------------')
 				return True
 
 			stdout, stderr = process.communicate()
@@ -97,34 +106,27 @@ class SideBarGit:
 			stdout = stdout.strip()
 
 			if stdout.find('fatal:') == 0 or stdout.find('error:') == 0 or stdout.find('Permission denied') == 0 or stderr:
-				print 'FAILED'
+				print ('FAILED')
 				failed = True
 			else:
 				if debug:
-					print 'SUCCESS'
+					print ('SUCCESS')
 			if stdout:
 				if debug:
-					print 'STDOUT'
-					print stdout
+					print ('STDOUT')
+					print (stdout)
 			if stderr:
-				print 'STDERR'
-				print stderr
-		except OSError as (errno, strerror):
-			print 'FAILED'
+				print ('STDERR')
+				print (stderr)
+		except (OSError, IOError) as e:
+			print ('FAILED')
 			failed = True
-			print errno
-			print strerror
-			SideBarGit.last_stdout = ''
-			self.last_stdout = ''
-		except IOError as (errno, strerror):
-			print 'FAILED'
-			failed = True
-			print errno
-			print strerror
+			print (e.errno)
+			print (e.strerror)
 			SideBarGit.last_stdout = ''
 			self.last_stdout = ''
 		if debug:
-			print '----------------------------------------------------------'
+			print ('----------------------------------------------------------')
 
 		try:
 			object.to_status_bar
@@ -176,7 +178,7 @@ class SideBarGit:
 				else:
 					view = refresh_funct_view
 				try:
-					view.set_name(object.title.decode('utf-8'))
+					view.set_name(object.title)
 				except:
 					view.set_name('No Title')
 				try:
@@ -218,9 +220,9 @@ class SideBarGit:
 						view.settings().set('SideBarGitSyntaxFile', False)
 
 				content = "[SideBarGit@SublimeText "
-				content += object.item.name().decode('utf-8')
+				content += object.item.name()
 				content += "/] "
-				content += (" ".join(object.command)).decode('utf-8')
+				content += (" ".join(object.command))
 				content += "\n\n"
 				content += "# Improve this command, the output or the tab title by posting here:"
 				content += "\n"
@@ -228,50 +230,44 @@ class SideBarGit:
 				content += "\n"
 				content += "# Tip: F5 will run the command again and refresh the contents of this tab"
 				content += "\n\n"
-				try:
-					content += stdout
-				except:
-					content += unicode(stdout, 'UTF-8', errors='ignore')
+				content += stdout
 
-				edit = view.begin_edit()
-				view.replace(edit, sublime.Region(0, view.size()), content);
-				view.sel().clear()
-				view.sel().add(sublime.Region(0))
-				view.end_edit(edit)
+				write_to_view(view, content);
+
 		return True
 
 	def confirm(self, message, function, arg1):
 		if int(sublime.version()) >= 2186:
-			if sublime.ok_cancel_dialog(u'Side Bar Git : '+message):
+			if sublime.ok_cancel_dialog('Side Bar Git : '+message):
 				function(arg1, True)
 		else:
 			import functools
 			sublime.active_window().run_command('hide_panel');
-			sublime.active_window().show_input_panel("Confirmation Required:", message.decode('utf-8'), functools.partial(function, arg1, True), None, None)
+			sublime.active_window().show_input_panel("Confirmation Required:", message, functools.partial(function, arg1, True), None, None)
 
 	def prompt(self, message, default, function, arg1):
 		import functools
 		sublime.active_window().run_command('hide_panel');
-		sublime.active_window().show_input_panel(message.decode('utf-8'), default.decode('utf-8'), functools.partial(function, arg1, True), None, None)
+		sublime.active_window().show_input_panel(message, default, functools.partial(function, arg1, True), None, None)
 
 	def alert(self, message):
 		try:
-			sublime.error_message('Git : '+(message.decode('utf-8')))
+			sublime.error_message('Git : '+(message))
 		except:
 			try:
 				sublime.error_message('Git : '+message)
 			except:
-				print message
+				print (message)
 
 	def status(self, message):
 		message = message[:200] + (message[200:] and '…')
 		message = message.replace('\n', ' ')
 		try:
 			v = sublime.active_window().active_view()
-			v.set_status('SideBarGit', 'Git : '+(message.decode('utf-8')))
+			v.set_status('SideBarGit', 'Git : '+(message))
 			sublime.set_timeout(lambda: SideBarGit().statusRemove(v), 16000)
 		except:#there is no tabs opened
-			sublime.status_message('Git : '+(message.decode('utf-8')))
+			sublime.status_message('Git : '+(message))
 
 	def statusRemove(self, v):
 		try:
