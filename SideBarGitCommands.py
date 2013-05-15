@@ -68,7 +68,7 @@ def closed_affected_items(items):
 	closed_items = []
 	for item in items:
 		if not item.isDirectory():
-			closed_items += item.close_associated_buffers()
+			closed_items += item.closeViews()
 	return closed_items
 
 def reopen_affected_items(closed_items):
