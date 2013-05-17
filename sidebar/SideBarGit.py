@@ -2,7 +2,6 @@
 import sublime
 import os
 import subprocess
-
 from .SideBarItem import SideBarItem
 
 class Object():
@@ -82,16 +81,14 @@ class SideBarGit:
 																	cwd=cwd,
 																	stdout=subprocess.PIPE,
 																	stderr=subprocess.STDOUT,
-																	shell=True,
-																	universal_newlines=True)
+																	shell=True)
 			else:
 				process = subprocess.Popen(
 																	object.command,
 																	cwd=cwd,
 																	stdout=subprocess.PIPE,
 																	stderr=subprocess.STDOUT,
-																	shell=False,
-																	universal_newlines=True)
+																	shell=False)
 
 			if background:
 				if debug:
@@ -100,6 +97,7 @@ class SideBarGit:
 				return True
 
 			stdout, stderr = process.communicate()
+			stdout = stdout.decode('utf-8', 'ignore');
 			SideBarGit.last_stdout = str(stdout).rstrip()
 			self.last_stdout = str(stdout).rstrip()
 
