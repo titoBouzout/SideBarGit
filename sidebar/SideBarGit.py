@@ -258,14 +258,20 @@ class SideBarGit:
 				print (message)
 
 	def status(self, message):
-		message = message[:200] + (message[200:] and '…')
-		message = message.replace('\n', ' ')
-		try:
-			v = sublime.active_window().active_view()
-			v.set_status('SideBarGit', 'Git : '+(message))
-			sublime.set_timeout(lambda: SideBarGit().statusRemove(v), 16000)
-		except:#there is no tabs opened
-			sublime.status_message('Git : '+(message))
+		if len(message) > 150:
+			view = sublime.active_window().new_file()
+			view.settings().set('word_wrap', False)
+			view.set_scratch(True)
+			content = "[SideBarGit@SublimeText] "
+			write_to_view(view, content+"\n"+message);
+		else:
+			message = message.replace('\n', ' ')
+			try:
+				v = sublime.active_window().active_view()
+				v.set_status('SideBarGit', 'Git : '+(message))
+				sublime.set_timeout(lambda: SideBarGit().statusRemove(v), 16000)
+			except:#there is no tabs opened
+				sublime.status_message('Git : '+(message))
 
 	def statusRemove(self, v):
 		try:
