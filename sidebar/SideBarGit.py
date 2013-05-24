@@ -104,7 +104,8 @@ class SideBarGit:
 			stdout = stdout.strip()
 
 			if stdout.find('fatal:') == 0 or stdout.find('error:') == 0 or stdout.find('Permission denied') == 0 or stderr:
-				print ('FAILED')
+				if debug:
+					print ('FAILED')
 				failed = True
 			else:
 				if debug:

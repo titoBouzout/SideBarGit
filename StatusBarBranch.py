@@ -13,11 +13,11 @@ def plugin_loaded():
 class StatusBarBranch(sublime_plugin.EventListener):
 
 	def on_load(self, v):
-		if s.get('statusbar_branch') and v.file_name():
+		if s.get('statusbar_branch') and v.file_name() and not v.settings().get('is_widget'):
 			StatusBarBranchGet(v.file_name(), v).start()
 
 	def on_activated(self, v):
-		if s.get('statusbar_branch') and v.file_name():
+		if s.get('statusbar_branch') and v.file_name() and not v.settings().get('is_widget'):
 			StatusBarBranchGet(v.file_name(), v).start()
 
 class StatusBarBranchGet(threading.Thread):
