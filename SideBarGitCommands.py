@@ -62,6 +62,7 @@ class SideBarGitRefreshTabContentsByRunningCommandAgain(sublime_plugin.WindowCom
 			return False
 		if view.settings().has('SideBarGitIsASideBarGitTab') or view.file_name():
 			return True
+		return False
 
 
 def closed_affected_items(items):
