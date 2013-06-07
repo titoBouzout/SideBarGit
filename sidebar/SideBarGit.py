@@ -74,14 +74,19 @@ class SideBarGit:
 
 		try:
 			if sublime.platform() == 'windows':
-
+				if 'push' in object.command:
+					object.command.insert(0, '/C')
+					object.command.insert(0, 'cmd')
+					shell = False
+				else:
+					shell = True
 				process = subprocess.Popen(
 																	#" ".join(object.command),
 																	object.command,
 																	cwd=cwd,
 																	stdout=subprocess.PIPE,
 																	stderr=subprocess.STDOUT,
-																	shell=True)
+																	shell=shell)
 			else:
 				process = subprocess.Popen(
 																	object.command,

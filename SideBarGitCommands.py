@@ -699,7 +699,7 @@ class SideBarGitPushAllBranchesCommand(sublime_plugin.WindowCommand):
 		for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 			object = Object()
 			object.item = item.repository
-			object.command = ['git','push','origin','*:*']
+			object.command = ['git','push','origin','--all']
 			object.to_status_bar = True
 			SideBarGit().run(object, True)
 
