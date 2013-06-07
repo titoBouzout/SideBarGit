@@ -3,6 +3,7 @@ import sublime
 import os
 import subprocess
 from .SideBarItem import SideBarItem
+import threading
 
 class Object():
 	pass
@@ -18,6 +19,37 @@ def plugin_loaded():
 
 def write_to_view(view, content):
 	view.run_command('write_to_view', {"content": content});
+
+class SideBarGitQueue:
+	def __init__(self):
+		self.queue = []
+		self.running = False;
+
+SideBarGitQueue = SideBarGitQueue();
+
+class SideBarGitThread(threading.Thread):
+		def __init__(self):
+			SideBarGitQueue.running = True
+			threading.Thread.__init__(self)
+
+		def run(self):
+			if len(SideBarGitQueue.queue) > 0:
+				object = SideBarGitQueue.queue.pop(0)
+				# print(object);
+				SideBarGit().run2(
+					object[0],
+					object[1],
+					object[2],
+					object[3],
+					object[4],
+					object[5],
+					object[6],
+					object[7],
+					object[8],
+					object[9]
+				);
+				SideBarGitThread().start();
+			SideBarGitQueue.running = False
 
 class SideBarGit:
 
@@ -37,7 +69,35 @@ class SideBarGit:
 					refresh_funct_no_results = False,
 					refresh_funct_syntax_file = False
 					):
+		SideBarGitQueue.queue.append([
+		                       	object,
+		                       	modal,
+		                       	background,
+		                       	refresh_funct_view,
+		                       	refresh_funct_command,
+		                       	refresh_funct_item,
+		                       	refresh_funct_to_status_bar,
+		                       	refresh_funct_title,
+		                       	refresh_funct_no_results,
+		                       	refresh_funct_syntax_file
+		                       ]);
+		if not SideBarGitQueue.running:
+			SideBarGitThread().start();
 
+	def run2(
+					self,
+					object,
+					modal = False,
+					background = False,
+
+					refresh_funct_view = False,
+					refresh_funct_command = False,
+					refresh_funct_item = False,
+					refresh_funct_to_status_bar = False,
+					refresh_funct_title = False,
+					refresh_funct_no_results = False,
+					refresh_funct_syntax_file = False
+					):
 		if not refresh_funct_view:
 			pass
 		else:
@@ -74,7 +134,7 @@ class SideBarGit:
 
 		try:
 			if sublime.platform() == 'windows':
-				if 'push' in object.command:
+				if 'push' in object.command or 'pull' in object.command or 'clone' in object.command or 'fetch' in object.command:
 					object.command.insert(0, '/C')
 					object.command.insert(0, 'cmd')
 					shell = False
@@ -102,6 +162,10 @@ class SideBarGit:
 				return True
 
 			stdout, stderr = process.communicate()
+			try:
+				process.kill()
+			except:
+				pass
 			stdout = stdout.decode('utf-8', 'ignore');
 			SideBarGit.last_stdout = str(stdout).rstrip()
 			self.last_stdout = str(stdout).rstrip()
