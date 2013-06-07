@@ -73,11 +73,15 @@ def closed_affected_items(items):
 	return closed_items
 
 def reopen_affected_items(closed_items):
+	active_view = sublime.active_window().active_view();
+
 	for item in closed_items:
 		file_name, window, view_index = item
 		if window and os.path.exists(file_name):
 			view = window.open_file(file_name)
 			window.set_view_index(view, view_index[0], view_index[1])
+	sublime.active_window().focus_view(active_view);
+
 #Following code for selected files or folders
 
 class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowCommand):
