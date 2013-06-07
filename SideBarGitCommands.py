@@ -288,7 +288,6 @@ class SideBarGitLogStatFullCommand(sublime_plugin.WindowCommand):
 
 class SideBarGitLogStatListLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
-		import sys
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = Object()
 			object.item = item
@@ -301,7 +300,6 @@ class SideBarGitLogStatListLatestCommand(sublime_plugin.WindowCommand):
 
 class SideBarGitLogStatListCommitLatestCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
-		import sys
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = Object()
 			object.item = item
@@ -511,7 +509,6 @@ class SideBarGitCheckoutToCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('Checkout selected items to object: ', '', self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarSelection(paths).getSelectedItems():
 				object = Object()
 				object.item = item
@@ -598,9 +595,11 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		failed = False
 		if input == False:
-			SideBarGit().prompt('Enter URL to clone: ', sublime.get_clipboard(), self.run, paths)
+			url = sublime.get_clipboard()
+			if '.git' not in url:
+				url = ''
+			SideBarGit().prompt('Enter URL to clone: ', url, self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 				object = Object()
 				object.item = item
@@ -644,7 +643,6 @@ class SideBarGitCheckoutRepositoryToCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('Checkout repository to object: ', '', self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
@@ -674,7 +672,6 @@ class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('Push with options: ', "git push aRemoteName aLocalBranch:aRemoteBranch", self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
@@ -740,7 +737,6 @@ class SideBarGitPullWithOptionsCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('Pull with options: ', "git pull", self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
@@ -769,7 +765,6 @@ class SideBarGitFetchWithOptionsCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('Fetch with options: ', "git fetch aRemoteName aRemoteBranch:aLocalBranch", self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
@@ -801,7 +796,6 @@ class SideBarGitCommitCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
-			import sys
 			content = (content[0].upper() + content[1:])
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				commitCommand = ['git', 'commit', '-m', content, '--']
@@ -822,7 +816,6 @@ class SideBarGitCommitAllCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
-			import sys
 			content = (content[0].upper() + content[1:])
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
@@ -855,7 +848,6 @@ class SideBarGitAddCommitCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
-			import sys
 			content = (content[0].upper() + content[1:])
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				commitCommandAdd = ['git', 'add', '--']
@@ -882,7 +874,6 @@ class SideBarGitAddCommitPushCommand(sublime_plugin.WindowCommand):
 			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
 			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
 		elif content != '':
-			import sys
 			content = (content[0].upper() + content[1:])
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				commitCommandAdd = ['git', 'add', '--']
@@ -961,7 +952,6 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('[SideBarGit@SublimeText ./]:', 'git ', self.run, paths)
 		elif content != '':
-			import sys
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 				object = Object()
 				object.item = item
@@ -979,7 +969,6 @@ class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('Remote add: ', "git remote add aRemoteName "+sublime.get_clipboard(), self.run, paths)
 		elif content != '':
-			import sys
 			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
@@ -996,7 +985,6 @@ class SideBarGitBranchNewFromCurrentCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
-			import sys
 			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
@@ -1013,7 +1001,6 @@ class SideBarGitBranchNewFromMasterCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
-			import sys
 			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
@@ -1035,7 +1022,6 @@ class SideBarGitBranchNewFromCleanCurrentCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
-			import sys
 			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 
@@ -1053,7 +1039,6 @@ class SideBarGitBranchNewFromCleanMasterCommand(sublime_plugin.WindowCommand):
 		if input == False:
 			SideBarGit().prompt('New branch: ', "", self.run, paths)
 		elif content != '':
-			import sys
 			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 
@@ -1098,7 +1083,6 @@ class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
 			if result.startswith("*"):
 				return
 			else:
-				import sys
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
@@ -1124,7 +1108,6 @@ class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
 			if result.startswith("*"):
 				return
 			else:
-				import sys
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
@@ -1150,7 +1133,6 @@ class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 			if result.startswith("*"):
 				return
 			else:
-				import sys
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra
@@ -1176,7 +1158,6 @@ class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 			if result.startswith("*"):
 				return
 			else:
-				import sys
 				branch = result.split(' ')[0]
 				object = Object()
 				object.item = extra

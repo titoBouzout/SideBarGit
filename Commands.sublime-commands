@@ -1,6 +1,128 @@
 [
-  {
-    "caption": "File: Refresh",
-    "command": "side_bar_git_refresh_tab_contents_by_running_command_again"
-  }
+
+{"caption": "File: Refresh","command": "side_bar_git_refresh_tab_contents_by_running_command_again"},
+
+{"caption": "Git: Add & Commit…", "command": "side_bar_git_add_commit", "args": {"paths": []}},
+{"caption": "Git: Add & Commit & Push…", "command": "side_bar_git_add_commit_push", "args": {"paths": []}},
+
+
+{"caption": "Git: Commit…", "command": "side_bar_git_commit", "args": {"paths": []}},
+{"caption": "Git: Commit Undo", "command": "side_bar_git_commit_undo", "args": {"paths": []}},
+
+
+{"caption": "Git: Commit Amend", "command": "side_bar_git_commit_amend", "args": {"paths": []}},
+{"caption": "Git: Commit All…", "command": "side_bar_git_commit_all", "args": {"paths": []}},
+
+
+{"caption": "Git: Status", "command": "side_bar_git_status", "args": {"paths": []}},
+
+
+{"caption": "Git: Diff: all changes since the last commit", "command": "side_bar_git_diff_all_changes_since_last_commit", "args": {"paths": []}},
+{"caption": "Git: Diff: all changes since the last commit ( ignore whitespace )", "command": "side_bar_git_diff_all_changes_since_last_commit_ignore_white_space", "args": {"paths": []}},
+
+{"caption": "Git: Diff: changes that have not been staged", "command": "side_bar_git_diff_changes_not_staged", "args": {"paths": []}},
+{"caption": "Git: Diff: changes that are staged but not committed", "command": "side_bar_git_diff_changes_staged_not_commited", "args": {"paths": []}},
+{"caption": "Git: Diff: between the index and last commit", "command": "side_bar_git_diff_between_index_and_last_commit", "args": {"paths": []}},
+
+{"caption": "Git: Diff: between remote and last local commit (origin/master..)", "command": "side_bar_git_diff_between_remote_and_last_local_commit", "args": {"paths": []}},
+{"caption": "Git: Diff: between last local commit and remote (..origin/master)", "command": "side_bar_git_diff_between_last_local_commit_and_remote", "args": {"paths": []}},
+
+{"caption": "Git: Diff: between the two latest tags", "command": "xxxx", "args": {"paths": []}},
+
+{"caption": "Git: Difftool: all changes since the last commit", "command": "side_bar_git_difftool_all_changes_since_last_commit", "args": {"paths": []}},
+
+{"caption": "Git: Difftool: changes that have not been staged", "command": "side_bar_git_difftool_changes_not_staged", "args": {"paths": []}},
+{"caption": "Git: Difftool: changes that are staged but not committed", "command": "side_bar_git_difftool_changes_staged_not_commited", "args": {"paths": []}},
+{"caption": "Git: Difftool: between the index and last commit", "command": "side_bar_git_difftool_between_index_and_last_commit", "args": {"paths": []}},
+
+{"caption": "Git: Difftool: between remote and last local commit (origin/master..)", "command": "side_bar_git_difftool_between_remote_and_last_local_commit", "args": {"paths": []}},
+{"caption": "Git: Difftool: between last local commit and remote (..origin/master)", "command": "side_bar_git_difftool_between_last_local_commit_and_remote", "args": {"paths": []}},
+
+{"caption": "Git: Difftool: between the two latest tags", "command": "xxxx", "args": {"paths": []}},
+
+{"caption": "Git: Log: short summary of changes last 30", "command": "side_bar_git_log_stat_short_latest", "args": {"paths": []}},
+{"caption": "Git: Log: short summary of changes full", "command": "side_bar_git_log_stat_short_full", "args": {"paths": []}},
+
+{"caption": "Git: Log: summary of changes last 30", "command": "side_bar_git_log_stat_latest", "args": {"paths": []}},
+{"caption": "Git: Log: summary of changes full", "command": "side_bar_git_log_stat_full", "args": {"paths": []}},
+
+{"caption": "Git: Log: list of changes last 50", "command": "side_bar_git_log_stat_list_latest", "args": {"paths": []}},
+{"caption": "Git: Log: list of changes last 50 with commit", "command": "side_bar_git_log_stat_list_commit_latest", "args": {"paths": []}},
+
+{"caption": "Git: Log: diffs of changes last 30", "command": "side_bar_git_log_extended_latest", "args": {"paths": []}},
+{"caption": "Git: Log: diffs of changes full", "command": "side_bar_git_log_extended_full", "args": {"paths": []}},
+
+{"caption": "Git: Log: summary of changes since latest tag", "command": "xxxx", "args": {"paths": []}},
+{"caption": "Git: Log: summary of changes since latest push", "command": "side_bar_git_log_since_latest_push", "args": {"paths": []}},
+
+{"caption": "Git: Log: between the two latest tags", "command": "xxxx", "args": {"paths": []}},
+
+{"caption": "Git: Reflog", "command": "side_bar_git_reflog", "args": {"paths": []}},
+
+{"caption": "Git: Blame", "command": "side_bar_git_blame", "args": {"paths": []}},
+
+
+{"caption": "Git: Tags: Auto-Tag", "command": "xxxx", "args": {"paths": []}},
+
+{"caption": "Git: Tags: Add…", "command": "xxxx", "args": {"paths": []}},
+{"caption": "Git: Tags: Remove…", "command": "xxxx", "args": {"paths": []}},
+
+{"caption": "Git: Tags: List", "command": "xxxx", "args": {"paths": []}},
+
+{"caption": "Git: Revert: discard changes to tracked", "command": "side_bar_git_revert_tracked", "args": {"paths": []}},
+
+{"caption": "Git: Revert: discard changes to tracked, clean untracked", "command": "side_bar_git_revert_tracked_clean_untracked", "args": {"paths": []}},
+{"caption": "Git: Revert: discard changes to tracked, clean untracked, unstage", "command": "side_bar_git_revert_tracked_clean_untracked_unstage", "args": {"paths": []}},
+{"caption": "Git: Revert: discard changes to tracked, unstage, clean untracked", "command": "side_bar_git_revert_tracked_unstage_clean_untracked", "args": {"paths": []}},
+
+{"caption": "Git: Revert: unstage", "command": "side_bar_git_revert_unstage", "args": {"paths": []}},
+
+{"caption": "Git: Branch: new from current and switch to…", "command": "side_bar_git_branch_new_from_current", "args": {"paths": []}},
+{"caption": "Git: Branch: new from master and switch to…", "command": "side_bar_git_branch_new_from_master", "args": {"paths": []}},
+
+{"caption": "Git: Branch: new from cleaned current and switch to…", "command": "side_bar_git_branch_new_from_clean_current", "args": {"paths": []}},
+{"caption": "Git: Branch: new from cleaned master and switch to…", "command": "side_bar_git_branch_new_from_clean_master", "args": {"paths": []}},
+
+{"caption": "Git: Branch: switch to master",   "command": "side_bar_git_branch_switch_to_master", "args": {"paths": []}},
+{"caption": "Git: Branch: switch to…",   "command": "side_bar_git_branch_switch_to", "args": {"paths": []}},
+
+{"caption": "Git: Branch: rebase current into master", "command": "side_bar_git_rebase_current_into_master", "args": {"paths": []}},
+
+{"caption": "Git: Branch: merge changes to current from…", "command": "side_bar_git_merge_to_current_from", "args": {"paths": []}},
+
+{"caption": "Git: Branch: delete…",     "command": "side_bar_git_branch_delete", "args": {"paths": []}},
+{"caption": "Git: Branch: delete even if unmerged (force deletion)…","command": "side_bar_git_branch_delete_force", "args": {"paths": []}},
+
+{"caption": "Git: Checkout to…", "command": "side_bar_git_checkout_to", "args": {"paths": []}},
+{"caption": "Git: Checkout repository to…", "command": "side_bar_git_checkout_repository_to", "args": {"paths": []}},
+
+{"caption": "Git: Push", "command": "side_bar_git_push", "args": {"paths": []}},
+{"caption": "Git: Push All Branches", "command": "side_bar_git_push_all_branches", "args": {"paths": []}},
+{"caption": "Git: Push, Push Tags", "command": "side_bar_git_push_and_push_tags", "args": {"paths": []}},
+{"caption": "Git: Push Tags", "command": "side_bar_git_push_tags", "args": {"paths": []}},
+{"caption": "Git: Push with options…", "command": "side_bar_git_push_with_options", "args": {"paths": []}},
+
+{"caption": "Git: Pull", "command": "side_bar_git_pull", "args": {"paths": []}},
+{"caption": "Git: Pull with options…", "command": "side_bar_git_pull_with_options", "args": {"paths": []}},
+
+{"caption": "Git: Fetch", "command": "side_bar_git_fetch", "args": {"paths": []}},
+{"caption": "Git: Fetch with options…", "command": "side_bar_git_fetch_with_options", "args": {"paths": []}},
+
+{"caption": "Git: Remote add…", "command": "side_bar_git_remote_add", "args": {"paths": []}},
+
+{"caption": "Git: Clone…", "command": "side_bar_git_clone", "args": {"paths": []}},
+{"caption": "Git: Init", "command": "side_bar_git_init", "args": {"paths": []}},
+
+{"caption": "Git: File: Add", "command": "side_bar_git_add", "args": {"paths": []}},
+{"caption": "Git: File: Remove", "command": "side_bar_git_remove", "args": {"paths": []}},
+{"caption": "Git: File: Remove Keep Local", "command": "side_bar_git_remove_keep_local", "args": {"paths": []}},
+
+{"caption": "Git: File: Add to Git Ignore", "command": "side_bar_git_ignore_add", "args": {"paths": []}},
+{"caption": "Git: Open Git Ignore", "command": "side_bar_git_ignore_open", "args": {"paths": []}},
+
+{"caption": "Git: Git GUI", "command": "side_bar_git_gui", "args": {"paths": []}},
+{"caption": "Git: Gitk", "command": "side_bar_git_gitk", "args": {"paths": []}},
+
+{"caption": "Git: Liberal Command", "command": "side_bar_git_liberal", "args": {"paths": []}}
+
 ]
