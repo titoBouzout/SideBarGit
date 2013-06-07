@@ -6,6 +6,8 @@ import threading
 class Object():
 	pass
 
+s = {}
+
 def plugin_loaded():
 	global s
 	s = sublime.load_settings('SideBarGit.sublime-settings')
