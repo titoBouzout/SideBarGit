@@ -67,22 +67,36 @@ class SideBarGit:
 					refresh_funct_to_status_bar = False,
 					refresh_funct_title = False,
 					refresh_funct_no_results = False,
-					refresh_funct_syntax_file = False
+					refresh_funct_syntax_file = False,
+					blocking=False
 					):
-		SideBarGitQueue.queue.append([
-		                       	object,
-		                       	modal,
-		                       	background,
-		                       	refresh_funct_view,
-		                       	refresh_funct_command,
-		                       	refresh_funct_item,
-		                       	refresh_funct_to_status_bar,
-		                       	refresh_funct_title,
-		                       	refresh_funct_no_results,
-		                       	refresh_funct_syntax_file
-		                       ]);
-		if not SideBarGitQueue.running:
-			SideBarGitThread().start();
+		if not blocking:
+			SideBarGitQueue.queue.append([
+			                       	object,
+			                       	modal,
+			                       	background,
+			                       	refresh_funct_view,
+			                       	refresh_funct_command,
+			                       	refresh_funct_item,
+			                       	refresh_funct_to_status_bar,
+			                       	refresh_funct_title,
+			                       	refresh_funct_no_results,
+			                       	refresh_funct_syntax_file
+			                       ]);
+			if not SideBarGitQueue.running:
+				SideBarGitThread().start();
+		else:
+			self.run2(
+			    object,
+					modal,
+					background,
+					refresh_funct_view,
+					refresh_funct_command,
+					refresh_funct_item,
+					refresh_funct_to_status_bar,
+					refresh_funct_title,
+					refresh_funct_no_results,
+					refresh_funct_syntax_file)
 
 	def run2(
 					self,
@@ -352,8 +366,8 @@ class SideBarGit:
 	def quickPanel(self, function, extra, data):
 		import functools
 		window = sublime.active_window()
-		# window.show_input_panel("BUG!", '', '', None, None)
-		# window.run_command('hide_panel');
+		window.show_input_panel("BUG!", '', '', None, None)
+		window.run_command('hide_panel');
 		data = [item[:70] for item in data]
 		window.show_quick_panel(data, functools.partial(self.quickPanelDone, function, extra, data))
 

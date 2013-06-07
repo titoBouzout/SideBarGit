@@ -1075,7 +1075,7 @@ class SideBarGitBranchSwitchToCommand(sublime_plugin.WindowCommand):
 			object.item = repo.repository
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
-			SideBarGit().run(object)
+			SideBarGit().run(object, blocking=True)
 			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
@@ -1100,7 +1100,7 @@ class SideBarGitBranchDeleteCommand(sublime_plugin.WindowCommand):
 			object.item = repo.repository
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
-			SideBarGit().run(object)
+			SideBarGit().run(object, blocking=True)
 			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
@@ -1125,7 +1125,7 @@ class SideBarGitBranchDeleteForceCommand(sublime_plugin.WindowCommand):
 			object.item = repo.repository
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
-			SideBarGit().run(object)
+			SideBarGit().run(object, blocking=True)
 			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
@@ -1150,7 +1150,7 @@ class SideBarGitMergeToCurrentFromCommand(sublime_plugin.WindowCommand):
 			object.item = repo.repository
 			object.command = ['git', 'branch', '-v']
 			object.silent = True
-			SideBarGit().run(object)
+			SideBarGit().run(object, blocking=True)
 			SideBarGit().quickPanel(self.on_done, repo.repository, (SideBarGit.last_stdout).split('\n'))
 
 	def on_done(self, extra, data, result):
