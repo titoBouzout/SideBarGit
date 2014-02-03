@@ -1,7 +1,9 @@
+***[Sublime Text 3+](http://www.sublimetext.com/) Package. Install via an updated version of  [Package Control 2+](https://sublime.wbond.net/installation). Just **DON'T** install manually.
+
 Description
 ------------------
 
-Provides git commands on Side Bar of Files and Folders for Sublime Text 2. For sublime text see: http://www.sublimetext.com/
+Provides git commands on Side Bar of Files and Folders for Sublime Text. For sublime text see: http://www.sublimetext.com/
 
 It should work with files names in any language.
 
@@ -155,11 +157,6 @@ Git GUI
 Gitk
 Liberal Git Command
 </pre>
-
-Installation
-------------------
-
- * Install this repository via "Package Control" http://wbond.net/sublime_packages/package_control
 
 Todo
 ------------------
