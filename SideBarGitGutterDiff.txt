@@ -8,12 +8,14 @@ import re
 import tempfile
 import codecs
 import os
+
 import time
 
-from SideBarGit import SideBarGit
-from SideBarItem import SideBarItem
-from Utils import Object
+from .sidebar.SideBarItem import SideBarItem
+from .sidebar.SideBarGit import SideBarGit
 
+class Object:
+	pass
 Object.running = False
 Object.timing = time.time()
 
@@ -47,7 +49,7 @@ class SideBarGitGutterDiff(sublime_plugin.EventListener):
 					view.settings().set('SideBarGitGutterPath', item.forCwdSystemPathRelativeFrom(repos[0].repository.path()))
 				else:
 					view.settings().set('SideBarGitGutterRepository', '')
-			
+
 			# if in a repo check for modifications
 			repo =  view.settings().get('SideBarGitGutterRepository')
 			if repo != '':
@@ -72,11 +74,10 @@ class SideBarGitGutterDiffThread(threading.Thread):
 		self.content = content
 
 	def run(self):
-
 		tmp = tempfile.NamedTemporaryFile(delete=False)
 		codecs.open(tmp.name, 'w+', 'utf-8').write(self.content)
 
-		comand = ['git', 'diff', '-p', '--unified=0', '--no-color', '--ignore-all-space', '--ignore-space-at-eol', '--ignore-space-change', 'HEAD:'+self.path, tmp.name]
+		comand = ['git', 'diff', '-p', '--unified=0', '--no-color', '--ignore-all-space', '--ignore-space-at-eol', '--ignore-space-change', self.path, tmp.name]
 
 		process = subprocess.Popen(
 																comand,
@@ -87,13 +88,18 @@ class SideBarGitGutterDiffThread(threading.Thread):
 																universal_newlines=True)
 
 		stdout, stderr = process.communicate()
+		print(stdout)
+		print(stderr)
 		if stdout != '' and stdout.find('fatal:') != 0:
 
 			hunk = re.finditer('\n@@ -([0-9]+),?([0-9]*) \+([0-9]+),?([0-9]*) @@', stdout)
-
 			additions = []
 			deletions = []
 			changes = []
+			print('------------')
+			print(additions)
+			print(deletions)
+			print(changes)
 
 			for change in hunk:
 				g = []
@@ -135,6 +141,10 @@ class SideBarGitGutterDiffThread(threading.Thread):
 	def add_regions(self, additions, deletions, changes):
 
 		self.erase_regions()
+		print('------------')
+		print(additions)
+		print(deletions)
+		print(changes)
 
 		rs = []
 		for r in additions:
@@ -142,7 +152,7 @@ class SideBarGitGutterDiffThread(threading.Thread):
 				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
 				r[0] = r[0]+1
 		if len(rs):
-			self.view.add_regions("git.diff.additions", rs, "number", "dot", sublime.HIDDEN)
+			self.view.add_regions("git.diff.additions", rs, "entity.name.function", "dot", sublime.HIDDEN)
 
 		rs = []
 		for r in deletions:
@@ -158,7 +168,7 @@ class SideBarGitGutterDiffThread(threading.Thread):
 				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
 				r[0] = r[0]+1
 		if len(rs):
-			self.view.add_regions("git.diff.changes", rs, "string", "dot", sublime.HIDDEN)
+			self.view.add_regions("git.diff.changes", rs, "entity.name.function", "dot", sublime.HIDDEN)
 
 
 	def erase_regions(self):
