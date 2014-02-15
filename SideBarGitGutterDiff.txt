@@ -1,6 +1,5 @@
 import sublime
 import sublime_plugin
-import functools
 import threading
 import subprocess
 import sys
@@ -8,60 +7,96 @@ import re
 import tempfile
 import codecs
 import os
+import _thread as thread
 
 import time
 
 from .sidebar.SideBarItem import SideBarItem
 from .sidebar.SideBarGit import SideBarGit
 
-class Object:
-	pass
-Object.running = False
-Object.timing = time.time()
+running = False
+timing = time.time()
+loaded = False
+modified = True
+
+def plugin_loaded():
+	global loaded
+	loaded = True
+	# threads listening scroll, and waiting to set data on focus change
+	if not 'running_sg_git_gutter_loop' in globals():
+		global running_sg_git_gutter_loop
+		running_sg_git_gutter_loop = True
+		thread.start_new_thread(sg_git_gutter_loop, ())
+
+def sg_git_gutter_loop():
+	global running
+	while True:
+		if not running:
+			sublime.set_timeout(lambda:SideBarGitGutterDiff().run(sublime.active_window().active_view()), 0)
+		time.sleep(0.3)
 
 class SideBarGitGutterDiff(sublime_plugin.EventListener):
 
 	def on_load(self, view):
-		self.run(view)
+		global modified
+		if loaded:
+			modified = True
+			self.run(view)
 
 	def on_modified(self, view):
+		global timing, modified
+		modified = True
 		now = time.time()
-		if now - Object.timing > 0.1:
-			Object.timing = now
-			self.run(view)
+		if now - timing > 0.3:
+			timing = now
+			if loaded:
+				self.run(view)
 		else:
-			Object.timing = now
+			timing = now
 
 	def on_post_save(self, view):
 		self.run(view)
 
 	def run(self, view):
-		if Object.running == False and view.file_name() != None and view.file_name() != '':
-			Object.running = True
+		global running, modified
+
+		if running == False and modified and view.file_name() != None and view.file_name() != '':
+			modified = False
+
+			running = True
 			# cache file repository ( if any )
 			if not view.settings().has('SideBarGitGutterRepository'):
+				#print('not has')
 				item = SideBarItem(view.file_name(), False)
 				_item = SideBarItem(view.file_name(), False)
 				repos = SideBarGit().getSelectedRepos([_item])
+				#print(repos)
+				#print(len(repos))
+				#print(repos[0].repository.path())
 				if len(repos) > 0:
-					view.settings().set('SideBarGitGutterRepository', repos[0].repository.path())
-					view.settings().set('SideBarGitGutterCWD', repos[0].repository.path())
-					view.settings().set('SideBarGitGutterPath', item.forCwdSystemPathRelativeFrom(repos[0].repository.path()))
+					#print('set')
+					view.settings().set('SideBarGitGutterRepository', str(repos[0].repository.path()))
+					view.settings().set('SideBarGitGutterCWD', str(repos[0].repository.path()))
+					view.settings().set('SideBarGitGutterPath', str(item.forCwdSystemPathRelativeFrom(repos[0].repository.path())))
 				else:
+					#print('set to empty')
 					view.settings().set('SideBarGitGutterRepository', '')
 
 			# if in a repo check for modifications
 			repo =  view.settings().get('SideBarGitGutterRepository')
+			#print(repo)
 			if repo != '':
+				#print('running thread')
 				SideBarGitGutterDiffThread(
-																		view,
-																		repo,
-																		view.settings().get('SideBarGitGutterCWD'),
-																		view.settings().get('SideBarGitGutterPath'),
-																		view.substr(sublime.Region(0, view.size()))
-																		).start()
+												view,
+												repo,
+												view.settings().get('SideBarGitGutterCWD'),
+												view.settings().get('SideBarGitGutterPath'),
+												view.substr(sublime.Region(0, view.size()))
+												).start()
 			else:
-				Object.running = False
+				#print('repo empty')
+				running = False
 
 class SideBarGitGutterDiffThread(threading.Thread):
 
@@ -74,32 +109,32 @@ class SideBarGitGutterDiffThread(threading.Thread):
 		self.content = content
 
 	def run(self):
+
 		tmp = tempfile.NamedTemporaryFile(delete=False)
 		codecs.open(tmp.name, 'w+', 'utf-8').write(self.content)
 
 		comand = ['git', 'diff', '-p', '--unified=0', '--no-color', '--ignore-all-space', '--ignore-space-at-eol', '--ignore-space-change', self.path, tmp.name]
 
 		process = subprocess.Popen(
-																comand,
-																cwd=self.cwd,
-																stdout=subprocess.PIPE,
-																stderr=subprocess.STDOUT,
-																shell=sys.platform == 'win32',
-																universal_newlines=True)
+									comand,
+									cwd=self.cwd,
+									stdout=subprocess.PIPE,
+									stderr=subprocess.STDOUT,
+									shell=sys.platform == 'win32',
+									universal_newlines=True)
 
 		stdout, stderr = process.communicate()
-		print(stdout)
-		print(stderr)
+
 		if stdout != '' and stdout.find('fatal:') != 0:
 
 			hunk = re.finditer('\n@@ -([0-9]+),?([0-9]*) \+([0-9]+),?([0-9]*) @@', stdout)
 			additions = []
 			deletions = []
 			changes = []
-			print('------------')
-			print(additions)
-			print(deletions)
-			print(changes)
+			# print('------------')
+			# print(additions)
+			# print(deletions)
+			# print(changes)
 
 			for change in hunk:
 				g = []
@@ -117,64 +152,70 @@ class SideBarGitGutterDiffThread(threading.Thread):
 					if deleted > 0:
 						if deleted == 1:
 							if added > deleted:
-								deletions.append([g[2], g[2]+deleted-added]);
+								deletions.append([g[2], g[2]+1]);
 							else:
 								deletions.append([g[2], g[2]+1]);
 						else:
-							deletions.append([g[2]-1, g[2]+deleted-1])
+							deletions.append([g[2]-1, g[2]+1])
 					if added > 0:
 						if added == 1:
-							additions.append([g[2], g[2]+added]);
+							additions.append([g[2]-1, g[2]+added-1]);
 						else:
 							additions.append([g[2]-1, g[2]+added-1])
 			tmp.close();
-			os.remove(tmp.name)
-			sublime.set_timeout(functools.partial(self.add_regions, additions, deletions, changes), 0)
+			try:
+				os.remove(tmp.name)
+			except:
+				pass
+			sublime.set_timeout(lambda:self.add_regions(self.view, additions, deletions, changes), 0)
 		else:
 			tmp.close();
 			os.remove(tmp.name)
-			sublime.set_timeout(functools.partial(self.erase_regions), 0)
-			if stdout.find('fatal:'):
-				sublime.set_timeout(functools.partial(self.mark_not_in_a_repository), 0)
-		Object.running = False
+			if stdout.find('fatal:') != -1:
+				self.view.settings().set('SideBarGitGutterRepository', '')
+			sublime.set_timeout(lambda:self.erase_regions(self.view), 0)
 
-	def add_regions(self, additions, deletions, changes):
+	def add_regions(self, view, additions, deletions, changes):
+		global running
 
-		self.erase_regions()
-		print('------------')
-		print(additions)
-		print(deletions)
-		print(changes)
+		# print('------------')
+		# print(additions)
+		# print(deletions)
+		# print(changes)
+
+		view.erase_regions("git.diff.additions")
+		view.erase_regions("git.diff.deletions")
+		view.erase_regions("git.diff.changes")
 
 		rs = []
 		for r in additions:
-			while r[0] != r[1]:
-				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
+			while r[0] < r[1]:
+				rs.append(view.line(view.text_point(r[0], 0)))
 				r[0] = r[0]+1
 		if len(rs):
-			self.view.add_regions("git.diff.additions", rs, "entity.name.function", "dot", sublime.HIDDEN)
+			view.add_regions("git.diff.additions", rs, "entity.name.function", "dot", sublime.DRAW_OUTLINED)
 
 		rs = []
 		for r in deletions:
-			while r[0] != r[1]:
-				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
+			while r[0] < r[1]:
+				rs.append(view.line(view.text_point(r[0], 0)))
 				r[0] = r[0]+1
 		if len(rs):
-			self.view.add_regions("git.diff.deletions", rs, "entity.name.class", "dot", sublime.HIDDEN)
+			view.add_regions("git.diff.deletions", rs, "entity.class.name", "dot", sublime.DRAW_OUTLINED)
 
 		rs = []
 		for r in changes:
-			while r[0] != r[1]:
-				rs.append(sublime.Region(self.view.text_point(r[0], 0)))
+			while r[0] < r[1]:
+				rs.append(view.line(view.text_point(r[0], 0)))
 				r[0] = r[0]+1
 		if len(rs):
-			self.view.add_regions("git.diff.changes", rs, "entity.name.function", "dot", sublime.HIDDEN)
+			view.add_regions("git.diff.changes", rs, "entity.name.function", "dot", sublime.DRAW_OUTLINED)
 
+		running = False
 
-	def erase_regions(self):
-		self.view.erase_regions("git.diff.additions")
-		self.view.erase_regions("git.diff.deletions")
-		self.view.erase_regions("git.diff.changes")
-
-	def mark_not_in_a_repository(self):
-		self.view.settings().set('SideBarGitGutterRepository', '')
+	def erase_regions(self, view):
+		global running
+		view.erase_regions("git.diff.additions")
+		view.erase_regions("git.diff.deletions")
+		view.erase_regions("git.diff.changes")
+		running = False
