@@ -64,8 +64,9 @@ class SideBarGitGutterDiff(sublime_plugin.EventListener):
 			modified = False
 
 			running = True
+			settings = view.settings()
 			# cache file repository ( if any )
-			if not view.settings().has('SideBarGitGutterRepository'):
+			if not settings.has('SideBarGitGutterRepository'):
 				#print('not has')
 				item = SideBarItem(view.file_name(), False)
 				_item = SideBarItem(view.file_name(), False)
@@ -75,23 +76,23 @@ class SideBarGitGutterDiff(sublime_plugin.EventListener):
 				#print(repos[0].repository.path())
 				if len(repos) > 0:
 					#print('set')
-					view.settings().set('SideBarGitGutterRepository', str(repos[0].repository.path()))
-					view.settings().set('SideBarGitGutterCWD', str(repos[0].repository.path()))
-					view.settings().set('SideBarGitGutterPath', str(item.forCwdSystemPathRelativeFrom(repos[0].repository.path())))
+					settings.set('SideBarGitGutterRepository', str(repos[0].repository.path()))
+					settings.set('SideBarGitGutterCWD', str(repos[0].repository.path()))
+					settings.set('SideBarGitGutterPath', str(item.forCwdSystemPathRelativeFrom(repos[0].repository.path())))
 				else:
 					#print('set to empty')
-					view.settings().set('SideBarGitGutterRepository', '')
+					settings.set('SideBarGitGutterRepository', '')
 
 			# if in a repo check for modifications
-			repo =  view.settings().get('SideBarGitGutterRepository')
+			repo =  settings.get('SideBarGitGutterRepository')
 			#print(repo)
 			if repo != '':
 				#print('running thread')
 				SideBarGitGutterDiffThread(
 												view,
 												repo,
-												view.settings().get('SideBarGitGutterCWD'),
-												view.settings().get('SideBarGitGutterPath'),
+												settings.get('SideBarGitGutterCWD'),
+												settings.get('SideBarGitGutterPath'),
 												view.substr(sublime.Region(0, view.size()))
 												).start()
 			else:
@@ -170,7 +171,10 @@ class SideBarGitGutterDiffThread(threading.Thread):
 			sublime.set_timeout(lambda:self.add_regions(self.view, additions, deletions, changes), 0)
 		else:
 			tmp.close();
-			os.remove(tmp.name)
+			try:
+				os.remove(tmp.name)
+			except:
+				pass
 			if stdout.find('fatal:') != -1:
 				self.view.settings().set('SideBarGitGutterRepository', '')
 			sublime.set_timeout(lambda:self.erase_regions(self.view), 0)
@@ -218,4 +222,5 @@ class SideBarGitGutterDiffThread(threading.Thread):
 		view.erase_regions("git.diff.additions")
 		view.erase_regions("git.diff.deletions")
 		view.erase_regions("git.diff.changes")
+
 		running = False

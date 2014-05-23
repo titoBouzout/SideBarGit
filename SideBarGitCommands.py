@@ -599,7 +599,7 @@ class SideBarGitCloneCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		failed = False
 		if input == False:
-			url = sublime.get_clipboard()
+			url = sublime.get_clipboard().strip()
 			if '.git' not in url:
 				url = ''
 			SideBarGit().prompt('Enter URL to clone: ', url, self.run, paths)
@@ -674,7 +674,7 @@ class SideBarGitPushCommand(sublime_plugin.WindowCommand):
 class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
-			SideBarGit().prompt('Push with options: ', "git push aRemoteName aLocalBranch:aRemoteBranch", self.run, paths)
+			SideBarGit().prompt('Push with options: ', "git push origin master:master", self.run, paths)
 		elif content != '':
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
@@ -767,7 +767,7 @@ class SideBarGitFetchCommand(sublime_plugin.WindowCommand):
 class SideBarGitFetchWithOptionsCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
-			SideBarGit().prompt('Fetch with options: ', "git fetch aRemoteName aRemoteBranch:aLocalBranch", self.run, paths)
+			SideBarGit().prompt('Fetch with options: ', "git fetch origin master:master", self.run, paths)
 		elif content != '':
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
@@ -971,7 +971,7 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
-			SideBarGit().prompt('Remote add: ', "git remote add aRemoteName "+sublime.get_clipboard(), self.run, paths)
+			SideBarGit().prompt('Remote add: ', "git remote add origin "+sublime.get_clipboard().strip(), self.run, paths)
 		elif content != '':
 			content = content
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
