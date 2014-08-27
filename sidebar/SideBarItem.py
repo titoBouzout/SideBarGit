@@ -162,7 +162,7 @@ class SideBarItem:
 
 	def dirnameCreate(self):
 		try:
-			os.makedirs(self.dirname())
+			os.makedirs(self.dirname(), 0o775)
 		except:
 			pass
 
@@ -177,15 +177,18 @@ class SideBarItem:
 	def namePretty(self):
 		return self.name().replace(self.extension(), '').replace('-', ' ').replace('_', ' ').strip();
 
-	def open(self):
+	def open(self, use_powershell = True):
 		if self.isDirectory():
 			import subprocess
 			if sublime.platform() == 'osx':
 				subprocess.Popen(['/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal', '.'], cwd=self.forCwdSystemPath())
 			elif sublime.platform() == 'windows':
-				try:
-					subprocess.Popen(['start', 'powershell'], cwd=self.forCwdSystemPath(), shell=True)
-				except:
+				if use_powershell:
+					try:
+						subprocess.Popen(['start', 'powershell'], cwd=self.forCwdSystemPath(), shell=True)
+					except:
+						subprocess.Popen(['start', 'cmd', '.'], cwd=self.forCwdSystemPath(), shell=True)
+				else:
 					subprocess.Popen(['start', 'cmd', '.'], cwd=self.forCwdSystemPath(), shell=True)
 			elif sublime.platform() == 'linux':
 				subprocess.Popen(['gnome-terminal', '.'], cwd=self.forCwdSystemPath())
@@ -201,7 +204,9 @@ class SideBarItem:
 				desktop.open(self.path())
 
 	def edit(self):
-		return sublime.active_window().open_file(self.path())
+		view = sublime.active_window().open_file(self.path())
+		view.settings().set('open_with_edit', True);
+		return view
 
 	def isDirectory(self):
 		return self._is_directory
@@ -210,7 +215,7 @@ class SideBarItem:
 		return self.isDirectory() == False
 
 	def contentUTF8(self):
-		return open(self.path(), 'r', newline='').read()
+		return open(self.path(), 'r', newline='', encoding='utf-8').read()
 
 	def contentBinary(self):
 		return open(self.path(), "rb").read()
@@ -255,7 +260,7 @@ class SideBarItem:
 	def create(self):
 		if self.isDirectory():
 			self.dirnameCreate()
-			os.makedirs(self.path())
+			os.makedirs(self.path(), 0o775)
 		else:
 			self.dirnameCreate()
 			self.write('')
@@ -281,7 +286,7 @@ class SideBarItem:
 
 		if os.path.isfile(_from) or os.path.islink(_from):
 			try:
-				os.makedirs(os.path.dirname(_to));
+				os.makedirs(os.path.dirname(_to), 0o775);
 			except:
 				pass
 			if os.path.exists(_to):
@@ -289,7 +294,7 @@ class SideBarItem:
 			shutil.copy2(_from, _to)
 		else:
 			try:
-				os.makedirs(_to);
+				os.makedirs(_to, 0o775);
 			except:
 				pass
 			for content in os.listdir(_from):
@@ -324,7 +329,7 @@ class SideBarItem:
 	def moveRecursive(self, _from, _to):
 		if os.path.isfile(_from) or os.path.islink(_from):
 			try:
-				os.makedirs(os.path.dirname(_to));
+				os.makedirs(os.path.dirname(_to), 0o775);
 			except:
 				pass
 			if os.path.exists(_to):
@@ -332,7 +337,7 @@ class SideBarItem:
 			os.rename(_from, _to)
 		else:
 			try:
-				os.makedirs(_to);
+				os.makedirs(_to, 0o775);
 			except:
 				pass
 			for content in os.listdir(_from):
