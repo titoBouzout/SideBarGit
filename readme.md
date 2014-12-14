@@ -166,7 +166,7 @@ Todo
 Source-code
 ------------------
 
-https://github.com/SublimeText/SideBarGit
+https://github.com/titoBouzout/SideBarGit
 
 Forum Thread
 ------------------
