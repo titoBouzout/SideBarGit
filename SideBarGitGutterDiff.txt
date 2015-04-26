@@ -11,8 +11,9 @@ import _thread as thread
 
 import time
 
-from .sidebar.SideBarItem import SideBarItem
-from .sidebar.SideBarGit import SideBarGit
+from .SideBarAPI import SideBarItem
+
+from .SideBarGit import SideBarGit
 
 running = False
 timing = time.time()

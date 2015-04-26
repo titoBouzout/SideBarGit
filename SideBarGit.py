@@ -2,7 +2,8 @@
 import sublime
 import os
 import subprocess
-from .SideBarItem import SideBarItem
+from .SideBarAPI import SideBarItem
+
 import threading
 
 class Object():
@@ -11,11 +12,11 @@ class Object():
 class Content():
 	pass
 
-def plugin_loaded():
-	global s, path_to_git_unixes
-	s = sublime.load_settings('SideBarGit.sublime-settings')
-	path_to_git_unixes = s.get('path_to_git_unixes');
+s = {}
 
+def plugin_loaded():
+	global s
+	s = sublime.load_settings('SideBarGit.sublime-settings')
 
 def write_to_view(view, content):
 	view.run_command('write_to_view', {"content": content});
@@ -139,7 +140,7 @@ class SideBarGit:
 			object.command = list(map(self.escapeCMDWindows, object.command))
 
 		if sublime.platform() is not 'windows' and object.command[0] == 'git':
-			if path_to_git_unixes != '':
+			if s.get('path_to_git_unixes') != '':
 				object.command[0] = s.get('path_to_git_unixes')
 			elif os.path.exists('/usr/local/git/bin'):
 				object.command[0] = '/usr/local/git/bin/git'

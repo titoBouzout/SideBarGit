@@ -3,14 +3,23 @@ import sublime_plugin, sublime
 import os
 import re
 
+import threading
 
-from .sidebar.SideBarSelection import SideBarSelection
-from .sidebar.SideBarGit import SideBarGit
+
+from .SideBarAPI import SideBarSelection
+
+from .SideBarGit import SideBarGit
 
 try:
 	from BufferScroll import BufferScrollAPI
 except:
 	BufferScrollAPI = False
+
+s = {}
+
+def plugin_loaded():
+	global s
+	s = sublime.load_settings('SideBarGit.sublime-settings')
 
 class Object():
 	pass
@@ -1183,6 +1192,39 @@ class SideBarGitRebaseCurrentIntoMasterCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitStatusBarBranch(sublime_plugin.EventListener):
+
+	def on_load(self, v):
+		if s.get('statusbar_branch') and v.file_name() and not v.settings().get('is_widget'):
+			SideBarGitStatusBarBranchGet(v.file_name(), v).start()
+
+	def on_activated(self, v):
+		if s.get('statusbar_branch') and v.file_name() and not v.settings().get('is_widget'):
+			SideBarGitStatusBarBranchGet(v.file_name(), v).start()
+
+class SideBarGitStatusBarBranchGet(threading.Thread):
+
+	def __init__(self, file_name, v):
+		threading.Thread.__init__(self)
+		self.file_name = file_name
+		self.v = v
+
+	def run(self):
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection([self.file_name]).getSelectedItems()):
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'branch']
+			object.silent = True
+			SideBarGit().run(object)
+			sublime.set_timeout(lambda:self.on_done(SideBarGit.last_stdout), 0)
+			return
+
+	def on_done(self, branches):
+			branches = branches.split('\n')
+			for branch in branches:
+				if branch.startswith("*"):
+					self.v.set_status('statusbar_sidebargit_branch', branch)
+					return
  #  }
  #  this.tagAdd = function(event)
  #  {
