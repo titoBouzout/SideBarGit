@@ -12,6 +12,9 @@ def expandVars(path):
 		path = path.replace('%'+k+'%', v).replace('%'+k.lower()+'%', v)
 	return path
 
+def escapeCMDWindows(string):
+	return string.replace('^', '^^')
+
 BINARY = re.compile('\.(psd|ai|cdr|ico|cache|sublime-package|eot|svgz|ttf|woff|zip|tar|gz|rar|bz2|jar|xpi|mov|mpeg|avi|mpg|flv|wmv|mp3|wav|aif|aiff|snd|wma|asf|asx|pcm|pdf|doc|docx|xls|xlsx|ppt|pptx|rtf|sqlite|sqlitedb|fla|swf|exe)$', re.I)
 
 class SideBarSelection:
@@ -408,7 +411,7 @@ class SideBarItem:
 
 	def dirnameCreate(self):
 		try:
-			os.makedirs(self.dirname(), 0o775)
+			self._makedirs(self.dirname())
 		except:
 			pass
 
@@ -444,7 +447,7 @@ class SideBarItem:
 				subprocess.Popen(['open', self.name()], cwd=self.dirname())
 			elif sublime.platform() == 'windows':
 				import subprocess
-				subprocess.Popen(['start',  '', self.path()], cwd=self.dirname(), shell=True)
+				subprocess.Popen(['start',  '', escapeCMDWindows(self.path())], cwd=self.dirname(), shell=True)
 			else:
 				from . import desktop
 				desktop.open(self.path())
@@ -479,14 +482,18 @@ class SideBarItem:
 		if sublime.platform() == 'windows':
 			import subprocess
 			if self.isDirectory():
-				subprocess.Popen(["explorer", self.path()])
+				subprocess.Popen(["explorer", escapeCMDWindows(self.path())])
 			else:
-				subprocess.Popen(["explorer", '/select,', self.path()])
+				subprocess.Popen(["explorer", '/select,', escapeCMDWindows(self.path())])
 		else:
 			sublime.active_window().run_command("open_dir", {"dir": self.dirname(), "file": self.name()} )
 
 	def write(self, content):
 		open(self.path(), 'w+', encoding='utf8', newline='').write(str(content))
+		oldmask = os.umask(0o000)
+		if oldmask == 0:
+			os.chmod(self.path(), 0o644)
+		os.umask(oldmask)
 
 	def mime(self):
 		import mimetypes
@@ -513,10 +520,18 @@ class SideBarItem:
 	def create(self):
 		if self.isDirectory():
 			self.dirnameCreate()
-			os.makedirs(self.path(), 0o775)
+			self._makedirs(self.path())
 		else:
 			self.dirnameCreate()
 			self.write('')
+
+	def _makedirs(self, path):
+		oldmask = os.umask(0o000)
+		if oldmask == 0:
+			os.makedirs(path, 0o755);
+		else:
+			os.makedirs(path);
+		os.umask(oldmask)
 
 	def copy(self, location, replace = False):
 		location = SideBarItem(location, os.path.isdir(location));
@@ -539,7 +554,7 @@ class SideBarItem:
 
 		if os.path.isfile(_from) or os.path.islink(_from):
 			try:
-				os.makedirs(os.path.dirname(_to), 0o775);
+				self._makedirs(os.path.dirname(_to));
 			except:
 				pass
 			if os.path.exists(_to):
@@ -547,7 +562,7 @@ class SideBarItem:
 			shutil.copy2(_from, _to)
 		else:
 			try:
-				os.makedirs(_to, 0o775);
+				self._makedirs(_to);
 			except:
 				pass
 			for content in os.listdir(_from):
@@ -582,7 +597,7 @@ class SideBarItem:
 	def moveRecursive(self, _from, _to):
 		if os.path.isfile(_from) or os.path.islink(_from):
 			try:
-				os.makedirs(os.path.dirname(_to), 0o775);
+				self._makedirs(os.path.dirname(_to));
 			except:
 				pass
 			if os.path.exists(_to):
@@ -590,7 +605,7 @@ class SideBarItem:
 			os.rename(_from, _to)
 		else:
 			try:
-				os.makedirs(_to, 0o775);
+				self._makedirs(_to);
 			except:
 				pass
 			for content in os.listdir(_from):
