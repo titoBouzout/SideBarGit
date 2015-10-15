@@ -392,6 +392,17 @@ class SideBarGitStatusCommand(sublime_plugin.WindowCommand):
 		for item in SideBarSelection(paths).getSelectedItems():
 			object = Object()
 			object.item = item
+			object.command = ['git', 'status', '--', item.forCwdSystemName()]
+			object.title = 'Status: '+item.name()
+			SideBarGit().run(object)
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitStatusVerboseCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		for item in SideBarSelection(paths).getSelectedItems():
+			object = Object()
+			object.item = item
 			object.command = ['git', 'status', '--untracked-files=all', '--ignored', '--', item.forCwdSystemName()]
 			object.title = 'Status: '+item.name()
 			SideBarGit().run(object)

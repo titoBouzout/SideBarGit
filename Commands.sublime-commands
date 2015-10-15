@@ -14,6 +14,7 @@
 
 
 	{"caption": "Git (SideBarGit): Status", "command": "side_bar_git_status", "args": {"paths": []}},
+	{"caption": "Git (SideBarGit): Status Verbose", "command": "side_bar_git_status_verbose", "args": {"paths": []}},
 
 
 	{"caption": "Git (SideBarGit): Diff: all changes since the last commit", "command": "side_bar_git_diff_all_changes_since_last_commit", "args": {"paths": []}},

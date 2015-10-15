@@ -17,6 +17,7 @@
 			{ "caption": "-"},
 
 			{ "caption": "Status", 	  												"command": "side_bar_git_status", 												"args": {"paths": []} },
+			{ "caption": "Status Verbose", 	  												"command": "side_bar_git_status_verbose", 												"args": {"paths": []} },
 			{ "caption": "-"},
 			{
 				"caption": "Diff", "id":"side-bar-git-diff",
