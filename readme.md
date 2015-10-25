@@ -17,7 +17,7 @@ Usage
 
 * To apply commands to focused document use the document context menu.
 
-* Tip: If a command sends output to a tab ( example a diff ), pressing F5 on that tab: will execute the command again and refresh the tab with the new contents ( example the new computed diff )
+* Tip: If a command sends output to a tab ( example a diff ), pressing <kbd>F5</kbd> on that tab: will execute the command again and refresh the tab with the new contents ( example the new computed diff )
 
 Provides the following commands
 ------------------
