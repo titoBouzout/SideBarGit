@@ -1,4 +1,5 @@
 {
 	"statusbar_branch": true,
-	"path_to_git_unixes": "" //example: /usr/local/git/bin/git
+	"path_to_git_unixes": "", //example: /usr/local/git/bin/git
+	"syntax_blame": "" //example: "Git Blame.tmLanguage"
 }

@@ -382,6 +382,7 @@ class SideBarGitBlameCommand(sublime_plugin.WindowCommand):
 			object.item = item
 			object.command = ['git', 'blame', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Blame: '+item.name()
+			object.syntax_file = s.get('syntax_blame')
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -825,6 +826,24 @@ class SideBarGitCommitCommand(sublime_plugin.WindowCommand):
 				commitCommand = ['git', 'commit', '-m', content, '--']
 				for item in repo.items:
 					commitCommand.append(item.forCwdSystemPathRelativeFrom(repo.repository.path()))
+				object = Object()
+				object.item = repo.repository
+				object.to_status_bar = True
+				object.command = commitCommand
+				SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
+class SideBarGitCommit2Command(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		if input == False:
+			SideBarGit().prompt('Enter a commit message: ', '', self.run, paths)
+			sublime.active_window().run_command('toggle_setting', {"setting": "spell_check"})
+		elif content != '':
+			content = (content[0].upper() + content[1:])
+			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+				commitCommand = ['git', 'commit', '-m', content]
 				object = Object()
 				object.item = repo.repository
 				object.to_status_bar = True

@@ -265,7 +265,7 @@ class SideBarGit:
 				except:
 					view.set_name('No Title')
 				try:
-					if object.syntax_file != False:
+					if object.syntax_file:
 						view.set_syntax_file(object.syntax_file)
 				except:
 					pass
