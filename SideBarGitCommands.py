@@ -700,7 +700,7 @@ class SideBarGitPushWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = content.split(' ')
+				object.command = content.split()
 				object.to_status_bar = True
 				SideBarGit().run(object, True)
 
@@ -765,7 +765,7 @@ class SideBarGitPullWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = content.split(' ')
+				object.command = content.split()
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -793,7 +793,7 @@ class SideBarGitFetchWithOptionsCommand(sublime_plugin.WindowCommand):
 			for item in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = item.repository
-				object.command = content.split(' ')
+				object.command = content.split()
 				SideBarGit().run(object, True)
 
 	def is_enabled(self, paths = []):
@@ -998,7 +998,7 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 			for item in SideBarSelection(paths).getSelectedDirectoriesOrDirnames():
 				object = Object()
 				object.item = item
-				object.command = content.split(' ')
+				object.command = content.split()
 				object.title = content
 				object.no_results = 'No output'
 				object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
@@ -1016,7 +1016,7 @@ class SideBarGitRemoteAddCommand(sublime_plugin.WindowCommand):
 			for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
 				object = Object()
 				object.item = repo.repository
-				object.command = content.split(' ')
+				object.command = content.split()
 				object.to_status_bar = True
 				SideBarGit().run(object)
 
