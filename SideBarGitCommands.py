@@ -26,6 +26,16 @@ class Object():
 
 class WriteToViewCommand(sublime_plugin.TextCommand):
 	def run(self, edit, content):
+		content = content.split('\n')
+		for k, v in enumerate(content):
+			index = v[:3]
+			if index == '+++':
+				content[k] = content[k]+'\n'
+			elif index == '---':
+				content[k] = '\n'+content[k]
+			else:
+				content[k] = '\t'+v
+		content = '\n'.join(content)
 		view = self.view
 		view.replace(edit, sublime.Region(0, view.size()), content);
 		view.sel().clear()
@@ -101,7 +111,7 @@ class SideBarGitDiffAllChangesSinceLastCommitCommand(sublime_plugin.WindowComman
 			object.command = ['git', 'diff', 'HEAD', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -115,7 +125,7 @@ class SideBarGitDiffAllChangesSinceLastCommitIgnoreWhiteSpaceCommand(sublime_plu
 			object.command = ['git', 'diff', 'HEAD', '--no-color', '-w', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -129,7 +139,7 @@ class SideBarGitDiffChangesNotStagedCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'diff', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -143,7 +153,7 @@ class SideBarGitDiffChangesStagedNotCommitedCommand(sublime_plugin.WindowCommand
 			object.command = ['git', 'diff', '--no-color', '--staged', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -157,7 +167,7 @@ class SideBarGitDiffBetweenIndexAndLastCommitCommand(sublime_plugin.WindowComman
 			object.command = ['git', 'diff', '--no-color', '--cached', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -171,7 +181,7 @@ class SideBarGitDiffBetweenRemoteAndLastLocalCommitCommand(sublime_plugin.Window
 			object.command = ['git', 'diff', '--no-color', 'origin/master..', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -185,7 +195,7 @@ class SideBarGitDiffBetweenLastLocalCommitAndRemoteCommand(sublime_plugin.Window
 			object.command = ['git', 'diff', '--no-color', '..origin/master', '--', item.forCwdSystemName()]
 			object.title = 'Diff: '+item.name()+'.diff'
 			object.no_results = 'No differences to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -331,7 +341,7 @@ class SideBarGitLogExtendedLatestCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-n', '30', '-p', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -345,7 +355,7 @@ class SideBarGitLogExtendedFullCommand(sublime_plugin.WindowCommand):
 			object.command = ['git', 'log', '-p', '--decorate', '--no-color', '--', item.forCwdSystemName()]
 			object.title = 'Log: '+item.name()
 			object.no_results = 'No log to show'
-			object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+			object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 			object.word_wrap = False
 			SideBarGit().run(object)
 	def is_enabled(self, paths = []):
@@ -1001,7 +1011,7 @@ class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 				object.command = content.split()
 				object.title = content
 				object.no_results = 'No output'
-				object.syntax_file = 'Packages/Diff/Diff.tmLanguage'
+				object.syntax_file = 'Packages/SideBarGit/DiffSideBarGit.hidden-tmLanguage'
 				SideBarGit().run(object)
 
 	def is_enabled(self, paths = []):

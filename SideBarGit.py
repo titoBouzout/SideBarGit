@@ -1,6 +1,6 @@
 # coding=utf8
 import sublime
-import os
+import os, re
 import subprocess
 from .SideBarAPI import SideBarItem
 
@@ -343,7 +343,7 @@ class SideBarGit:
 				print (message)
 
 	def status(self, message):
-		if len(message) > 150:
+		if len(message) > 250:
 			view = sublime.active_window().new_file()
 			view.settings().set('word_wrap', False)
 			view.set_scratch(True)
