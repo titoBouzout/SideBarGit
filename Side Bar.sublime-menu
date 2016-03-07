@@ -84,7 +84,7 @@
 				"caption": "Tags", "id":"side-bar-git-tags",
 				"children":
 				[
-					{ "caption": "Auto-Tag", 	  												"command": "xxxx", 												"args": {"paths": []} },
+					{ "caption": "Auto-Tag", 	  												"command": "side_bar_git_tag_auto", 												"args": {"paths": []} },
 					{ "caption": "-"},
 					{ "caption": "Add…", 	  												"command": "xxxx", 												"args": {"paths": []} },
 					{ "caption": "Remove…", 	  												"command": "xxxx", 												"args": {"paths": []} },

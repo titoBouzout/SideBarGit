@@ -1232,6 +1232,21 @@ class SideBarGitRebaseCurrentIntoMasterCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitTagAutoCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = []):
+		import time
+		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
+			version = time.strftime('%Y%m%d.%H%M.%S')
+
+			object = Object()
+			object.item = repo.repository
+			object.command = ['git', 'tag', '-a', version, '-m', version]
+
+			SideBarGit().run(object)
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() > 0
+
 class SideBarGitStatusBarBranch(sublime_plugin.EventListener):
 
 	def on_load(self, v):

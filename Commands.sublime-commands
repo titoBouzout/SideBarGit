@@ -62,7 +62,7 @@
 	{"caption": "Git (SideBarGit): Blame", "command": "side_bar_git_blame", "args": {"paths": []}},
 
 
-	{"caption": "Git (SideBarGit): Tags: Auto-Tag", "command": "xxxx", "args": {"paths": []}},
+	{"caption": "Git (SideBarGit): Tags: Auto-Tag", "command": "side_bar_git_tag_auto", "args": {"paths": []}},
 
 	{"caption": "Git (SideBarGit): Tags: Add…", "command": "xxxx", "args": {"paths": []}},
 	{"caption": "Git (SideBarGit): Tags: Remove…", "command": "xxxx", "args": {"paths": []}},
