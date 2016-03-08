@@ -7,6 +7,7 @@ import threading
 
 
 from .SideBarAPI import SideBarSelection
+from .SideBarAPI import SideBarItem
 
 from .SideBarGit import SideBarGit
 
@@ -1003,18 +1004,23 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 class SideBarGitMvCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		failed = False
+		repo = SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems())[0]
+		path = repo.items[0].forCwdSystemPathRelativeFrom(repo.repository.path())
 		if input == False:
-			SideBarGit().prompt('MV To: ', SideBarSelection(paths).getSelectedItems()[0].name(), self.run, paths)
+			SideBarGit().prompt('Move To: ', path, self.run, paths)
 		elif content != '':
 			for item in SideBarSelection(paths).getSelectedItems():
+				destination = repo.repository.path()+'/'+content
+
+				SideBarItem(destination, os.path.isdir(destination)).dirnameCreate()
 				object = Object()
-				object.item = item
-				object.command = ['git', 'mv', item.name(), content]
-				# object.to_status_bar = True
+				object.item = SideBarItem(repo.repository.path(), os.path.isdir(repo.repository.path()))
+				object.command = ['git', 'mv', path, content]
+				object.to_status_bar = True
 				if not SideBarGit().run(object, True):
 					failed = True
 			if not failed:
-				SideBarGit().status('Move to "'+content+'"')
+				SideBarGit().status('Moved to "'+content+'"')
 
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() == 1
