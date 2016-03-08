@@ -116,6 +116,7 @@
 	{"caption": "Git (SideBarGit): File: Add", "command": "side_bar_git_add", "args": {"paths": []}},
 	{"caption": "Git (SideBarGit): File: Remove", "command": "side_bar_git_remove", "args": {"paths": []}},
 	{"caption": "Git (SideBarGit): File: Remove Keep Local", "command": "side_bar_git_remove_keep_local", "args": {"paths": []}},
+	{"caption": "Git (SideBarGit): File: Rename", "command": "side_bar_git_mv", "args": {"paths": []}},
 
 	{"caption": "Git (SideBarGit): File: Add to Git Ignore", "command": "side_bar_git_ignore_add", "args": {"paths": []}},
 	{"caption": "Git (SideBarGit): Open Git Ignore", "command": "side_bar_git_ignore_open", "args": {"paths": []}},

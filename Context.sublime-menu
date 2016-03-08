@@ -163,6 +163,7 @@
 			{ "caption": "Add", 	  												"command": "side_bar_git_add", 												"args": {"paths": []} },
 			{ "caption": "Remove", 	  												"command": "side_bar_git_remove", 												"args": {"paths": []} },
 			{ "caption": "Remove Keep Local", 	  												"command": "side_bar_git_remove_keep_local", 												"args": {"paths": []} },
+			{ "caption": "MV", 	  												"command": "side_bar_git_mv", 												"args": {"paths": []} },
 			{ "caption": "-"},
 
 			{ "caption": "Add to Git Ignore", 	  												"command": "side_bar_git_ignore_add", 												"args": {"paths": []} },

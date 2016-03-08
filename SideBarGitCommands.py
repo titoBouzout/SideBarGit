@@ -1000,6 +1000,25 @@ class SideBarGitRemoveCommand(sublime_plugin.WindowCommand):
 	def is_enabled(self, paths = []):
 		return SideBarSelection(paths).len() > 0
 
+class SideBarGitMvCommand(sublime_plugin.WindowCommand):
+	def run(self, paths = [], input = False, content = ''):
+		failed = False
+		if input == False:
+			SideBarGit().prompt('MV To: ', SideBarSelection(paths).getSelectedItems()[0].name(), self.run, paths)
+		elif content != '':
+			for item in SideBarSelection(paths).getSelectedItems():
+				object = Object()
+				object.item = item
+				object.command = ['git', 'mv', item.name(), content]
+				# object.to_status_bar = True
+				if not SideBarGit().run(object, True):
+					failed = True
+			if not failed:
+				SideBarGit().status('Move to "'+content+'"')
+
+	def is_enabled(self, paths = []):
+		return SideBarSelection(paths).len() == 1
+
 class SideBarGitLiberalCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], input = False, content = ''):
 		if input == False:
