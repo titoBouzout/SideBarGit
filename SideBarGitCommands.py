@@ -1261,7 +1261,7 @@ class SideBarGitTagAutoCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = []):
 		import time
 		for repo in SideBarGit().getSelectedRepos(SideBarSelection(paths).getSelectedItems()):
-			version = time.strftime('%Y%m%d.%H%M.%S')
+			version = time.strftime('%Y%m%d%H%M%S.0.0')
 
 			object = Object()
 			object.item = repo.repository
