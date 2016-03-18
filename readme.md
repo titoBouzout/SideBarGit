@@ -1,5 +1,3 @@
-***[Sublime Text 3+](http://www.sublimetext.com/) Package. Install via an updated version of  [Package Control 2+](https://sublime.wbond.net/installation). Just **DON'T** install manually.
-
 Description
 ------------------
 
@@ -18,6 +16,10 @@ Usage
 * To apply commands to focused document use the document context menu.
 
 * Tip: If a command sends output to a tab ( example a diff ), pressing <kbd>F5</kbd> on that tab: will execute the command again and refresh the tab with the new contents ( example the new computed diff )
+
+### Installation
+
+Download or clone the contents of this repository to a folder named exactly as the package name into the Packages/ folder of ST.
 
 Provides the following commands
 ------------------
